@@ -1,14 +1,29 @@
 import React from 'react';
+import styled, { keyframes } from 'styled-components';
 
-const style = {
-	backgroundColor: 'red',
-	position: 'absolute',
-	top: '30px',
-	bottom: 0,
-	left: 0,
-	right: 0,
-};
+import TaskForm from './TaskForm';
 
-const AddTask = () => <div>Add Task</div>;
+const changeBackground = keyframes`
+	from {
+		background-color: #fff;
+	}
+	to {
+		background-color: #eee;
+	}
+`;
+
+const Wrapper = styled.div`
+	height: 100vh;
+	background-color: #eee;
+	animation-name: ${changeBackground};
+	animation-timing-function: linear;
+	animation-duration: 1.5s;
+`;
+
+const AddTask = () => (
+	<Wrapper>
+		<TaskForm />
+	</Wrapper>
+);
 
 export default AddTask;
