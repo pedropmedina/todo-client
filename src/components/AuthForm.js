@@ -20,17 +20,10 @@ const Wrapper = styled.div`
 
 const Form = styled.form`
 	padding: 5rem;
-	box-shadow: 0 1rem 1rem rgba(0, 0, 0, 0.3);
+	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
 
 	> * {
 		width: 100%;
-
-		&:not(:last-child) {
-			margin-bottom: 3rem;
-			text-indent: 1rem;
-			height: 5rem;
-			font-size: 1.2rem;
-		}
 
 		&:last-child {
 			border: none;
@@ -39,6 +32,35 @@ const Form = styled.form`
 			color: white;
 			padding: 2rem;
 		}
+	}
+
+	> input {
+		text-indent: 1rem;
+		height: 5rem;
+		font-size: 1.6rem;
+		outline: none;
+		border: none;
+		border-bottom: 0.1rem solid #eee;
+		letter-spacing: 0.1rem;
+
+		&::placeholder {
+			color: #aaa;
+		}
+
+		&:focus + div {
+			width: 100%;
+			opacity: 1;
+		}
+	}
+
+	> div {
+		margin-bottom: 4rem;
+		border: 0.15rem solid tomato;
+		width: 1rem;
+		margin-left: auto;
+		margin-right: auto;
+		transition: 0.3s;
+		opacity: 0;
 	}
 `;
 
@@ -120,13 +142,16 @@ class AuthForm extends Component {
 								}}
 							>
 								{!this.props.login && (
-									<input
-										type="text"
-										name="username"
-										placeholder="username"
-										value={username}
-										onChange={this.handleInputField}
-									/>
+									<React.Fragment>
+										<input
+											type="text"
+											name="username"
+											placeholder="username"
+											value={username}
+											onChange={this.handleInputField}
+										/>
+										<div />
+									</React.Fragment>
 								)}
 								<input
 									type="email"
@@ -135,6 +160,7 @@ class AuthForm extends Component {
 									value={email}
 									onChange={this.handleInputField}
 								/>
+								<div />
 								<input
 									type="password"
 									name="password"
@@ -142,6 +168,7 @@ class AuthForm extends Component {
 									value={password}
 									onChange={this.handleInputField}
 								/>
+								<div />
 								<button>{this.props.login ? 'Login' : 'Signup'}</button>
 							</Form>
 						);
