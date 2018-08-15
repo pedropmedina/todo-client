@@ -24,14 +24,14 @@ const Form = styled.form`
 
 	> * {
 		width: 100%;
+	}
 
-		&:last-child {
-			border: none;
-			font-size: 1.6rem;
-			background-color: tomato;
-			color: white;
-			padding: 2rem;
-		}
+	> button {
+		border: none;
+		font-size: 1.6rem;
+		background-color: tomato;
+		color: white;
+		padding: 2rem;
 	}
 
 	> input {
@@ -130,7 +130,7 @@ class AuthForm extends Component {
 						this.setState(() => ({
 							fields: { username: '', email: '', password: '' },
 						}));
-						this.props.push('/dashboard');
+						this.props.push('/me/dashboard');
 					}}
 				>
 					{(authUser, { loading, error, data }) => {
@@ -176,11 +176,12 @@ class AuthForm extends Component {
 				</Mutation>
 				{this.props.login ? (
 					<div>
-						Don't have an account? - <Link to="/signup">Signup here →</Link>
+						Don't have an account? -{' '}
+						<Link to="/auth/signup">Signup here →</Link>
 					</div>
 				) : (
 					<div>
-						Already own an account? - <Link to="/login">Login here →</Link>
+						Already own an account? - <Link to="/auth/login">Login here →</Link>
 					</div>
 				)}
 			</Wrapper>

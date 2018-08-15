@@ -21,18 +21,25 @@ const slideInFromTop = keyframes`
 
 const Wrapper = styled.div`
 	/* border: 0.3rem solid blue; */
+	/* width: 50rem;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%); */
+	/* animation-name: ${slideInFromTop};
+	animation-duration: 1.3s;
+	animation-timing-function: ease-in; */
+	/* animation-delay: 2s; */
+	/* border: .2rem solid blue; */
+`;
+
+const Form = styled.form`
 	width: 50rem;
 	position: absolute;
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	animation-name: ${slideInFromTop};
-	animation-duration: 1.3s;
-	animation-timing-function: ease-in;
-	/* animation-delay: 2s; */
-`;
 
-const Form = styled.form`
 	> * {
 		width: 100%;
 
@@ -78,7 +85,7 @@ class TaskForm extends Component {
 	render() {
 		const { name, description, dueDate } = this.state.fields;
 		return (
-			<Wrapper>
+			<React.Fragment>
 				<Form onSubmit={event => event.preventDefault()}>
 					<input
 						type="text"
@@ -103,7 +110,7 @@ class TaskForm extends Component {
 					/>
 					<button>Add</button>
 				</Form>
-			</Wrapper>
+			</React.Fragment>
 		);
 	}
 }

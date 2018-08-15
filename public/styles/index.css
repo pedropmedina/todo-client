@@ -5,5 +5,5 @@
 
 .fade-enter.fade-enter-active {
 	opacity: 1;
-	transition: all 250ms ease-in;
+	transition: opacity 250ms ease-in;
 }

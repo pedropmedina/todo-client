@@ -1,26 +1,45 @@
 import React from 'react';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+// import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
-import '../../public/styles/index.css';
+// import '../../public/styles/index.css';
 
-const style1 = {
-	backgroundColor: 'blue',
-	position: 'absolute',
-	top: '30px',
-	bottom: 0,
-	left: 0,
-	right: 0,
-};
+const CancelButton = styled(Link)`
+	position: fixed;
+	bottom: 10rem;
+	right: 10rem;
+	display: block;
+	width: 7rem;
+	height: 7rem;
+	border-radius: 50%;
+	background-color: tomato;
+	color: white;
+	text-decoration: none;
 
-const style2 = {
-	width: '50px',
-	height: '50px',
-	backgroundColor: 'yellow',
-	position: 'absolute',
-	bottom: '20px',
-	left: '20px',
-};
+	> span {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+`;
 
-const Dashboard = () => <div>dashboard</div>;
+const Wrapper = styled.div`
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: green;
+`;
+
+const Dashboard = () => (
+	<Wrapper>
+		<CancelButton to="/me/add">
+			<span>ADD</span>
+		</CancelButton>
+	</Wrapper>
+);
 
 export default Dashboard;

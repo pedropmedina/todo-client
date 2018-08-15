@@ -1,29 +1,36 @@
 import React from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
+import { Link } from 'react-router-dom';
 
 import TaskForm from './TaskForm';
 
-const changeBackground = keyframes`
-	from {
-		background-color: #fff;
-	}
-	to {
-		background-color: #eee;
-	}
-`;
+const CancelButton = styled(Link)`
+	position: fixed;
+	bottom: 10rem;
+	right: 10rem;
+	display: block;
+	width: 7rem;
+	height: 7rem;
+	border-radius: 50%;
+	background-color: tomato;
+	color: white;
+	text-decoration: none;
 
-const Wrapper = styled.div`
-	height: 100vh;
-	background-color: #eee;
-	animation-name: ${changeBackground};
-	animation-timing-function: linear;
-	animation-duration: 1.5s;
+	> span {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
 `;
 
 const AddTask = () => (
-	<Wrapper>
+	<React.Fragment>
 		<TaskForm />
-	</Wrapper>
+		<CancelButton to="/me/dashboard">
+			<span>CANCEL</span>
+		</CancelButton>
+	</React.Fragment>
 );
 
 export default AddTask;
