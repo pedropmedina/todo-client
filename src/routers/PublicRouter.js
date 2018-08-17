@@ -7,7 +7,11 @@ const PublicRouter = ({ component: Component, ...rest }) => {
 		<Route
 			{...rest}
 			render={props =>
-				!authorization ? <Component {...props} /> : <Redirect to="/dashboard" />
+				!authorization ? (
+					<Component {...props} />
+				) : (
+					<Redirect to="/me/dashboard" />
+				)
 			}
 		/>
 	);

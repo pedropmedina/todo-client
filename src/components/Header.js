@@ -3,9 +3,9 @@ import { NavLink } from 'react-router-dom';
 
 const Header = () => (
 	<header>
-		<NavLink to="/login">Login</NavLink>
-		<NavLink to="/signup">Signup</NavLink>
-		<NavLink to="/dashboard">Dashboard</NavLink>
+		<NavLink to="/auth/login">Login</NavLink>
+		<NavLink to="/auth/signup">Signup</NavLink>
+		<NavLink to="/me/dashboard">Dashboard</NavLink>
 		{/* <NavLink to="/add">AddTask</NavLink> */}
 	</header>
 );
