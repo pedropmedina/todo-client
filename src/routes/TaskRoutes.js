@@ -1,6 +1,7 @@
 import React from 'react';
 import { Switch, Redirect } from 'react-router-dom';
 import posed, { PoseGroup } from 'react-pose';
+import styled from 'styled-components';
 
 import filterRoutes from '../helpers/filterRoutes';
 
@@ -37,22 +38,41 @@ export const matches = [
 const config = {
 	enter: {
 		opacity: 1,
-		transition: { opacity: { ease: 'easeIn', duration: 300 } },
+		scale: 1,
+		x: 0,
+		transition: {
+			opacity: { ease: 'easeIn', duration: 300 },
+			default: {
+				type: 'spring',
+				stiffness: 50,
+				ease: 'easeIn',
+				duration: 100,
+			},
+		},
 	},
 	exit: {
 		opacity: 0,
-		transition: { opacity: { ease: 'easeOut', duration: 300 } },
+		x: '100%',
+		transition: {
+			opacity: { ease: 'easeOut', duration: 300 },
+			default: { ease: 'easeOut', duration: 500 },
+		},
 	},
 };
 
-const RouteContainer = posed.div(config);
+const StyledRouteContainer = styled.div`
+	height: 100vh;
+	width: 100%;
+`;
+
+const RouteContainer = posed(StyledRouteContainer)(config);
 
 export default ({ location, match }) => {
 	const matched = matches
 		.filter(filterRoutes(location.pathname))
 		.map(({ path, component: Component, exact }) => (
 			<RouteContainer key={`ROUTE_${path}`}>
-				<PrivateRouter path={path} component={Component} exact={exact} />;
+				<PrivateRouter path={path} component={Component} exact={exact} />
 			</RouteContainer>
 		));
 

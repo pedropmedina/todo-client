@@ -1,11 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-// import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { Query } from 'react-apollo';
+import gql from 'graphql-tag';
 
-// import '../../public/styles/index.css';
+const GET_SHOW_TASK_FORM = gql`
+	{
+		showTaskForm @client
+	}
+`;
 
-const CancelButton = styled(Link)`
+const AddButton = styled(Link)`
 	position: fixed;
 	bottom: 10rem;
 	right: 10rem;
@@ -25,21 +30,21 @@ const CancelButton = styled(Link)`
 	}
 `;
 
-const Wrapper = styled.div`
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	background-color: green;
-`;
-
 const Dashboard = () => (
-	<Wrapper>
-		<CancelButton to="/me/add">
-			<span>ADD</span>
-		</CancelButton>
-	</Wrapper>
+	<Query query={GET_SHOW_TASK_FORM}>
+		{({ loading, error, data, client }) => (
+			<React.Fragment>
+				<AddButton
+					to="/me/add"
+					onClick={() => {
+						client.writeData({ data: { showTaskForm: true } });
+					}}
+				>
+					<span>ADD</span>
+				</AddButton>
+			</React.Fragment>
+		)}
+	</Query>
 );
 
 export default Dashboard;

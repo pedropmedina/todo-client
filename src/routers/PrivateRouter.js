@@ -10,10 +10,10 @@ const PrivateRouter = ({ component: Component, ...rest }) => {
 			{...rest}
 			render={props =>
 				authorization ? (
-					<div>
+					<React.Fragment>
 						<Header />
 						<Component {...props} />
-					</div>
+					</React.Fragment>
 				) : (
 					<Redirect to="/auth/login" />
 				)

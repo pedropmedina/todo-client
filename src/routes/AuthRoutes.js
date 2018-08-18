@@ -1,6 +1,7 @@
 import React from 'react';
 import { Switch, Redirect } from 'react-router-dom';
 import posed, { PoseGroup } from 'react-pose';
+import styled from 'styled-components';
 
 import filterRoutes from '../helpers/filterRoutes';
 
@@ -29,17 +30,23 @@ export const matches = [
 ];
 
 const config = {
-	enter: {
+	open: {
 		opacity: 1,
-		transition: { opacity: { ease: 'easeIn', duration: 1000 } },
+		transition: { opacity: { ease: 'easeInOut', duration: 300 } },
+		scale: 1,
 	},
 	exit: {
 		opacity: 0,
-		transition: { opacity: { ease: 'easeOut', duration: 1000 } },
+		transition: { opacity: { ease: 'easeOut', duration: 300 } },
+		scale: 0.1,
 	},
 };
 
-const RouteContainer = posed.div(config);
+const StyledRouteContainer = styled.div`
+	height: 100vh;
+	width: 100%;
+`;
+const RouteContainer = posed(StyledRouteContainer)(config);
 
 export default ({ location, match }) => {
 	const matched = matches

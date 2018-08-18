@@ -1,38 +1,6 @@
 import React, { Component } from 'react';
 import styled, { keyframes } from 'styled-components';
 
-const slideInFromTop = keyframes`
-	from {
-		position: absolute;
-		top: 0;
-		left: 50%;
-		transform: translateX(-50%);
-		opacity: 0
-	}
-
-	to {
-		position: absolute;
-		left: 50%;
-		top: 50%;
-		transform: translate(-50%, -50%);
-		opacity: 1;
-	}
-`;
-
-const Wrapper = styled.div`
-	/* border: 0.3rem solid blue; */
-	/* width: 50rem;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%); */
-	/* animation-name: ${slideInFromTop};
-	animation-duration: 1.3s;
-	animation-timing-function: ease-in; */
-	/* animation-delay: 2s; */
-	/* border: .2rem solid blue; */
-`;
-
 const Form = styled.form`
 	width: 50rem;
 	position: absolute;

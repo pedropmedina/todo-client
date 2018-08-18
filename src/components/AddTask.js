@@ -1,8 +1,17 @@
 import React from 'react';
 import styled, { keyframes, css } from 'styled-components';
 import { Link } from 'react-router-dom';
+import posed, { PoseGroup } from 'react-pose';
+import { Query } from 'react-apollo';
+import gql from 'graphql-tag';
 
 import TaskForm from './TaskForm';
+
+const GET_SHOW_TASK_FORM = gql`
+	{
+		showTaskForm @client
+	}
+`;
 
 const CancelButton = styled(Link)`
 	position: fixed;
@@ -15,6 +24,7 @@ const CancelButton = styled(Link)`
 	background-color: tomato;
 	color: white;
 	text-decoration: none;
+	z-index: 100;
 
 	> span {
 		position: absolute;
@@ -24,13 +34,49 @@ const CancelButton = styled(Link)`
 	}
 `;
 
+const StyledBg = styled.div`
+	/* width: ${props => (props.showTaskForm ? '100%' : '5rem')};
+	height: ${props => (props.showTaskForm ? '100vh' : '5rem')};
+	background-color: ${props => (props.showTaskForm ? 'papayawhip' : 'white')};
+	position: fixed;
+	bottom: ${props => (props.showTaskForm ? 'initial' : '5rem')};
+	right: ${props => (props.showTaskForm ? 'initial' : '5rem')}; */
+`;
+
+const config = {
+	enter: {
+		opacity: 1,
+		scale: 2,
+		transition: {
+			scale: { ease: 'easeInOut', duration: 1000 },
+		},
+	},
+	exit: {
+		// opacity: 0,
+		transition: {
+			opacity: { ease: 'easeOut', duration: 300 },
+		},
+	},
+};
+
+const Bg = posed(StyledBg)(config);
+
 const AddTask = () => (
-	<React.Fragment>
-		<TaskForm />
-		<CancelButton to="/me/dashboard">
-			<span>CANCEL</span>
-		</CancelButton>
-	</React.Fragment>
+	<Query query={GET_SHOW_TASK_FORM}>
+		{({ loading, error, data, client }) => (
+			<React.Fragment>
+				<TaskForm key={`FORM_${1}`} />
+				<CancelButton
+					to="/me/dashboard"
+					onClick={() => {
+						client.writeData({ data: { showTaskForm: false } });
+					}}
+				>
+					<span>CANCEL</span>
+				</CancelButton>
+			</React.Fragment>
+		)}
+	</Query>
 );
 
 export default AddTask;

@@ -25,7 +25,7 @@ const client = new ApolloClient({
 		});
 	},
 	clientState: {
-		defaults: { openTaskForm: false },
+		defaults: { showTaskForm: false },
 	},
 });
 
