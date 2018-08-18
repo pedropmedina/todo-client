@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Redirect } from 'react-router-dom';
+import { Switch, Redirect, Route } from 'react-router-dom';
 import posed, { PoseGroup } from 'react-pose';
 import styled from 'styled-components';
 
@@ -30,7 +30,7 @@ export const matches = [
 ];
 
 const config = {
-	open: {
+	enter: {
 		opacity: 1,
 		transition: { opacity: { ease: 'easeInOut', duration: 300 } },
 		scale: 1,
@@ -49,13 +49,14 @@ const StyledRouteContainer = styled.div`
 const RouteContainer = posed(StyledRouteContainer)(config);
 
 export default ({ location, match }) => {
-	const matched = matches
-		.filter(filterRoutes(location.pathname))
-		.map(({ path, component: Component, exact }) => (
-			<RouteContainer key={`ROUTE_${path}`}>
-				<PublicRouter path={path} component={Component} exact={exact} />
-			</RouteContainer>
-		));
+	const matched = matches.filter(filterRoutes(location.pathname)).map(
+		({ path, component: Component, exact }) =>
+			console.log(path) || (
+				<RouteContainer key={`ROUTE_${path}`}>
+					<PublicRouter path={path} component={Component} exact={exact} />
+				</RouteContainer>
+			),
+	);
 
 	return (
 		<Switch>

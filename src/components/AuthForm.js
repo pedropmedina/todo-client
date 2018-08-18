@@ -176,8 +176,7 @@ class AuthForm extends Component {
 				</Mutation>
 				{this.props.login ? (
 					<div>
-						Don't have an account? -{' '}
-						<Link to="/auth/signup">Signup here →</Link>
+						Don't have an account? -<Link to="/auth/signup">Signup here →</Link>
 					</div>
 				) : (
 					<div>
