@@ -87,6 +87,22 @@ class TaskForm extends Component {
 							this.props.updateTask({
 								variables: {
 									input: { id: this.props.id, name, description, dueDate },
+									// optimistic respose must return the exact data as the
+									// query, else it won't work. By using optimistic UI
+									// we tell apollo to return this before the server resolves
+									// speeding up client rendering. Apollo will replace
+									// optimistic respose with the respose from server
+									// when resolved.
+									optimisticResponse: {
+										__typename: 'Mutation',
+										updateTask: {
+											__typename: 'Task',
+											id: this.props.id,
+											name,
+											description,
+											dueDate,
+										},
+									},
 								},
 							});
 						}
