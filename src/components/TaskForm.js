@@ -61,7 +61,7 @@ class TaskForm extends Component {
 		fields: {
 			name: this.props.name || '',
 			description: this.props.description || '',
-			dueDate: this.props.description || '',
+			dueDate: this.props.dueDate || '',
 		},
 	};
 
@@ -79,9 +79,17 @@ class TaskForm extends Component {
 				<Form
 					onSubmit={event => {
 						event.preventDefault();
-						this.props.newTask({
-							variables: { input: { name, description, dueDate } },
-						});
+						if (this.props.newTask) {
+							this.props.newTask({
+								variables: { input: { name, description, dueDate } },
+							});
+						} else {
+							this.props.updateTask({
+								variables: {
+									input: { id: this.props.id, name, description, dueDate },
+								},
+							});
+						}
 					}}
 				>
 					<input
