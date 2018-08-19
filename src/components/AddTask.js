@@ -1,31 +1,8 @@
 import React from 'react';
-import styled, { keyframes, css } from 'styled-components';
-import { Link } from 'react-router-dom';
 import { Query, Mutation, ApolloConsumer } from 'react-apollo';
 import gql from 'graphql-tag';
 
 import TaskForm from './TaskForm';
-
-const CancelButton = styled(Link)`
-	position: fixed;
-	bottom: 10rem;
-	right: 10rem;
-	display: block;
-	width: 7rem;
-	height: 7rem;
-	border-radius: 50%;
-	background-color: tomato;
-	color: white;
-	text-decoration: none;
-	z-index: 100;
-
-	> span {
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-	}
-`;
 
 const ADD_TASK = gql`
 	mutation AddTask($input: NewTaskInput!) {
@@ -92,9 +69,6 @@ const AddTask = props => (
 		{newTask => (
 			<React.Fragment>
 				<TaskForm newTask={newTask} />
-				<CancelButton to="/me/dashboard">
-					<span>CANCEL</span>
-				</CancelButton>
 			</React.Fragment>
 		)}
 	</Mutation>

@@ -1,5 +1,11 @@
 import React from 'react';
 
-const EditTask = () => <div>Edit Task</div>;
+import TaskForm from './TaskForm';
+
+const EditTask = props => (
+	<React.Fragment>
+		<TaskForm />
+	</React.Fragment>
+);
 
 export default EditTask;

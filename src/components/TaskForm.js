@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const Form = styled.form`
 	width: 50rem;
@@ -31,6 +32,27 @@ const Form = styled.form`
 			font-size: 1.6rem;
 			padding: 2rem;
 		}
+	}
+`;
+
+const CancelButton = styled(Link)`
+	position: fixed;
+	bottom: 10rem;
+	right: 10rem;
+	display: block;
+	width: 7rem;
+	height: 7rem;
+	border-radius: 50%;
+	background-color: tomato;
+	color: white;
+	text-decoration: none;
+	z-index: 100;
+
+	> span {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
 	}
 `;
 
@@ -85,6 +107,9 @@ class TaskForm extends Component {
 					/>
 					<button>Add</button>
 				</Form>
+				<CancelButton to="/me/dashboard">
+					<span>CANCEL</span>
+				</CancelButton>
 			</React.Fragment>
 		);
 	}
