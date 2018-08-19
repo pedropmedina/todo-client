@@ -10,7 +10,7 @@ const ListItem = styled.li`
 	position: relative;
 
 	> * {
-		flex: 1;
+		flex: 9;
 		padding: 2rem;
 		font-size: 1.2rem;
 		letter-spacing: 0.1rem;
@@ -19,6 +19,51 @@ const ListItem = styled.li`
 			> * {
 				padding: 1rem;
 				cursor: pointer;
+			}
+		}
+
+		&:first-child {
+			flex: 1;
+			position: relative;
+
+			> input {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				visibility: hidden;
+				z-index: 1;
+
+				&:checked + label::after {
+					background-color: tomato;
+				}
+			}
+
+			> label {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				display: inline-block;
+				width: 2rem;
+				height: 2rem;
+				border: none;
+				border-radius: 50%;
+				background-color: crimson;
+
+				&::after {
+					content: '';
+					position: absolute;
+					top: 50%;
+					left: 50%;
+					transform: translate(-50%, -50%);
+					display: inline-block;
+					width: 1rem;
+					height: 1rem;
+					background-color: transparent;
+					border-radius: 50%;
+					line-height: 1;
+				}
 			}
 		}
 	}
@@ -76,6 +121,10 @@ const Task = ({ id, name, description, dueDate }) => (
 	>
 		{removeTask => (
 			<ListItem>
+				<span>
+					<input type="checkbox" id={`toggle-complete-${id}`} />
+					<label htmlFor={`toggle-complete-${id}`} />
+				</span>
 				<span>{name}</span>
 				<span>{description}</span>
 				<span>{dueDate}</span>
