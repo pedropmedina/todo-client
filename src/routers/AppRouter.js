@@ -24,9 +24,6 @@ const client = new ApolloClient({
 			headers: { authorization: token ? `Bearer ${token}` : '' },
 		});
 	},
-	clientState: {
-		defaults: { showTaskForm: false },
-	},
 });
 
 const AppRouter = ({ history }) => (

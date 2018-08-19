@@ -1,17 +1,10 @@
 import React from 'react';
 import styled, { keyframes, css } from 'styled-components';
 import { Link } from 'react-router-dom';
-import posed, { PoseGroup } from 'react-pose';
-import { Query } from 'react-apollo';
+import { Query, Mutation, ApolloConsumer } from 'react-apollo';
 import gql from 'graphql-tag';
 
 import TaskForm from './TaskForm';
-
-const GET_SHOW_TASK_FORM = gql`
-	{
-		showTaskForm @client
-	}
-`;
 
 const CancelButton = styled(Link)`
 	position: fixed;
@@ -34,49 +27,77 @@ const CancelButton = styled(Link)`
 	}
 `;
 
-const StyledBg = styled.div`
-	/* width: ${props => (props.showTaskForm ? '100%' : '5rem')};
-	height: ${props => (props.showTaskForm ? '100vh' : '5rem')};
-	background-color: ${props => (props.showTaskForm ? 'papayawhip' : 'white')};
-	position: fixed;
-	bottom: ${props => (props.showTaskForm ? 'initial' : '5rem')};
-	right: ${props => (props.showTaskForm ? 'initial' : '5rem')}; */
+const ADD_TASK = gql`
+	mutation AddTask($input: NewTaskInput!) {
+		newTask(input: $input) {
+			id
+			name
+			description
+			dueDate
+		}
+	}
 `;
 
-const config = {
-	enter: {
-		opacity: 1,
-		scale: 2,
-		transition: {
-			scale: { ease: 'easeInOut', duration: 1000 },
-		},
-	},
-	exit: {
-		// opacity: 0,
-		transition: {
-			opacity: { ease: 'easeOut', duration: 300 },
-		},
-	},
+const GET_TASKS = gql`
+	{
+		tasks: findTasks {
+			id
+			name
+			description
+			dueDate
+		}
+	}
+`;
+
+/*
+In case I decide to use ApolloConsumer instead
+----------------------------------------------
+
+const updateCache = client => async newTask => {
+	const { tasks } = await client.readQuery({ query: GET_TASKS });
+	client.writeQuery({
+		query: GET_TASKS,
+		data: { tasks: [...tasks, newTask] },
+	});
 };
 
-const Bg = posed(StyledBg)(config);
+const addNewTask = client => async ({ name, description, dueDate }) => {
+	const { data } = await client.mutate({
+		mutation: ADD_TASK,
+		variables: { input: { name, description, dueDate } },
+	});
+	updateCache(client)(data.newTask);
+};
+*/
 
-const AddTask = () => (
-	<Query query={GET_SHOW_TASK_FORM}>
-		{({ loading, error, data, client }) => (
+// Can't find field <field> on object ROOT_QUERY undefined when
+// updating the cache from this page where the mutation is taking place.
+// This happens because on this page there's not ROOT_QUERY, only
+// ROOT_MUTATION exist as that's the operation taking place from here.
+// To fix issue push to Dashboard where I'm querying the tasks list,
+// thus ROOT_QUERY is going be present under cache.
+// read more: https://github.com/apollographql/apollo-client/issues/1701
+const AddTask = props => (
+	<Mutation
+		mutation={ADD_TASK}
+		update={async (cache, { data: { newTask } }) => {
+			const { tasks } = await cache.readQuery({ query: GET_TASKS });
+			cache.writeQuery({
+				query: GET_TASKS,
+				data: { tasks: [...tasks, newTask] },
+			});
+			props.history.push('/me/dashboard');
+		}}
+	>
+		{newTask => (
 			<React.Fragment>
-				<TaskForm key={`FORM_${1}`} />
-				<CancelButton
-					to="/me/dashboard"
-					onClick={() => {
-						client.writeData({ data: { showTaskForm: false } });
-					}}
-				>
+				<TaskForm newTask={newTask} />
+				<CancelButton to="/me/dashboard">
 					<span>CANCEL</span>
 				</CancelButton>
 			</React.Fragment>
 		)}
-	</Query>
+	</Mutation>
 );
 
 export default AddTask;

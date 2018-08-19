@@ -4,11 +4,7 @@ import { Link } from 'react-router-dom';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
-const GET_SHOW_TASK_FORM = gql`
-	{
-		showTaskForm @client
-	}
-`;
+import TasksList from './TasksList';
 
 const AddButton = styled(Link)`
 	position: fixed;
@@ -30,20 +26,30 @@ const AddButton = styled(Link)`
 	}
 `;
 
+const GET_TASKS = gql`
+	{
+		tasks: findTasks {
+			id
+			name
+			description
+			dueDate
+		}
+	}
+`;
+
 const Dashboard = () => (
-	<Query query={GET_SHOW_TASK_FORM}>
-		{({ loading, error, data, client }) => (
-			<React.Fragment>
-				<AddButton
-					to="/me/add"
-					onClick={() => {
-						client.writeData({ data: { showTaskForm: true } });
-					}}
-				>
-					<span>ADD</span>
-				</AddButton>
-			</React.Fragment>
-		)}
+	<Query query={GET_TASKS}>
+		{({ loading, error, data, client }) => {
+			if (loading) return <div>LOADING...</div>;
+			return (
+				<React.Fragment>
+					<TasksList tasks={data.tasks} />
+					<AddButton to="/me/add">
+						<span>ADD</span>
+					</AddButton>
+				</React.Fragment>
+			);
+		}}
 	</Query>
 );
 

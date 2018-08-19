@@ -105,13 +105,13 @@ class AuthForm extends Component {
 		this.setState(() => ({ fields }));
 	};
 
-	confirmUser = data => {
+	confirmUser = async data => {
 		const { token } = this.props.login ? data.login : data.signup;
 		this.saveUser(token);
 	};
 
 	saveUser = token => {
-		localStorage.setItem('authorization', `Bearer ${token}`);
+		localStorage.setItem('authorization', token);
 	};
 
 	render() {

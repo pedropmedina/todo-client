@@ -54,7 +54,14 @@ class TaskForm extends Component {
 		const { name, description, dueDate } = this.state.fields;
 		return (
 			<React.Fragment>
-				<Form onSubmit={event => event.preventDefault()}>
+				<Form
+					onSubmit={event => {
+						event.preventDefault();
+						this.props.newTask({
+							variables: { input: { name, description, dueDate } },
+						});
+					}}
+				>
 					<input
 						type="text"
 						name="name"
