@@ -3,13 +3,26 @@ import styled from 'styled-components';
 
 import Task from './Task';
 
-const Table = styled.article`
-	width: 60rem;
-	position: absolute;
+const Wrapper = styled.article`
+	width: 70rem;
+	/* position: absolute;
 	top: 50%;
 	left: 50%;
-	transform: translate(-50%, -50%);
-	background-color: papayawhip;
+	transform: translate(-50%, -50%); */
+	margin: 2rem auto;
+`;
+
+const Preview = styled.section`
+	padding: 1rem;
+	font-size: 1.6rem;
+	background-color: white;
+	color: #aeaeae;
+	display: flex;
+	justify-content: space-between;
+`;
+
+const Table = styled.section`
+	box-shadow: 0 01rem 2rem rgba(0, 0, 0, 0.1);
 `;
 
 const TableHeader = styled.header`
@@ -39,7 +52,7 @@ const TableHeader = styled.header`
 				z-index: 1;
 
 				&:checked + label::after {
-					background-color: tomato;
+					background-color: white;
 				}
 			}
 
@@ -51,9 +64,8 @@ const TableHeader = styled.header`
 				display: inline-block;
 				width: 2rem;
 				height: 2rem;
-				border: none;
+				border: 0.2rem solid white;
 				border-radius: 50%;
-				background-color: crimson;
 
 				&::after {
 					content: '';
@@ -74,22 +86,28 @@ const TableHeader = styled.header`
 `;
 
 const TasksList = props => (
-	<Table>
-		<TableHeader>
-			<h4>
-				<input type="checkbox" id="toggleAll" />
-				<label htmlFor="toggleAll" />
-			</h4>
-			<h4>Name</h4>
-			<h4>Description</h4>
-			<h4>Due on</h4>
-		</TableHeader>
-		<ul>
-			{props.tasks.map(({ id, ...task }) => (
-				<Task key={id} {...task} id={id} />
-			))}
-		</ul>
-	</Table>
+	<Wrapper>
+		<Preview>
+			<span>Preview todos and lists</span>
+			<span>Search</span>
+		</Preview>
+		<Table>
+			<TableHeader>
+				<h4>
+					<input type="checkbox" id="toggleAll" />
+					<label htmlFor="toggleAll" />
+				</h4>
+				<h4>Name</h4>
+				<h4>Description</h4>
+				<h4>Due on</h4>
+			</TableHeader>
+			<ul>
+				{props.tasks.map(({ id, ...task }) => (
+					<Task key={id} {...task} id={id} />
+				))}
+			</ul>
+		</Table>
+	</Wrapper>
 );
 
 export default TasksList;

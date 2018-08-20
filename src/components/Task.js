@@ -22,7 +22,7 @@ const ListItem = styled.li`
 			}
 		}
 
-		&:first-child {
+		&:nth-child(2) {
 			flex: 1;
 			position: relative;
 
@@ -35,7 +35,7 @@ const ListItem = styled.li`
 				z-index: 1;
 
 				&:checked + label::after {
-					background-color: tomato;
+					background-color: rgba(195, 57, 34, 0.5);
 				}
 			}
 
@@ -47,9 +47,8 @@ const ListItem = styled.li`
 				display: inline-block;
 				width: 2rem;
 				height: 2rem;
-				border: none;
+				border: 0.2rem solid rgba(195, 57, 34, 0.5);
 				border-radius: 50%;
-				background-color: crimson;
 
 				&::after {
 					content: '';
@@ -72,7 +71,8 @@ const ListItem = styled.li`
 		background-color: #eee;
 	}
 
-	&:hover > span:last-child {
+	&:hover > span:last-child,
+	&:hover > span:first-child {
 		visibility: visible;
 		background-color: tomato;
 		color: white;
@@ -82,6 +82,12 @@ const ListItem = styled.li`
 const Controllers = styled.span`
 	position: absolute;
 	left: 100%;
+	visibility: hidden;
+`;
+
+const List = styled.span`
+	position: absolute;
+	right: 100%;
 	visibility: hidden;
 `;
 
@@ -121,6 +127,7 @@ const Task = ({ id, name, description, dueDate }) => (
 	>
 		{removeTask => (
 			<ListItem>
+				<List>LIST</List>
 				<span>
 					<input type="checkbox" id={`toggle-complete-${id}`} />
 					<label htmlFor={`toggle-complete-${id}`} />

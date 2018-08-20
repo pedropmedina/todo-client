@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
+import Header from './Header';
 import TasksList from './TasksList';
 
 const AddButton = styled(Link)`
@@ -43,6 +44,7 @@ const Dashboard = () => (
 			if (loading) return <div>LOADING...</div>;
 			return (
 				<React.Fragment>
+					<Header />
 					<TasksList tasks={data.tasks} />
 					<AddButton to="/me/add">
 						<span>ADD</span>
