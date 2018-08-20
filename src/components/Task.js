@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { Mutation } from 'react-apollo';
@@ -113,37 +113,55 @@ const GET_TASKS = gql`
 	}
 `;
 
-const Task = ({ id, name, description, dueDate }) => (
-	<Mutation
-		mutation={REMOVE_TASK}
-		variables={{ id }}
-		update={(cache, { data: { removeTask } }) => {
-			const { tasks } = cache.readQuery({ query: GET_TASKS });
-			cache.writeQuery({
-				query: GET_TASKS,
-				data: { tasks: tasks.filter(task => task.id !== id) },
-			});
-		}}
-	>
-		{removeTask => (
-			<ListItem>
-				<List>LIST</List>
-				<span>
-					<input type="checkbox" id={`toggle-complete-${id}`} />
-					<label htmlFor={`toggle-complete-${id}`} />
-				</span>
-				<span>{name}</span>
-				<span>{description}</span>
-				<span>{dueDate}</span>
-				<Controllers>
-					<span>
-						<Anchor to={`/me/edit/${id}`}>O</Anchor>
-					</span>
-					<span onClick={removeTask}>X</span>
-				</Controllers>
-			</ListItem>
-		)}
-	</Mutation>
-);
+class Task extends Component {
+	state = {
+		completed: false,
+	};
+
+	handleToggleCompleted = event => {
+		this.setState(({ completed }) => ({ completed: !completed }));
+	};
+
+	render() {
+		const { id, name, description, dueDate } = this.props;
+		return (
+			<Mutation
+				mutation={REMOVE_TASK}
+				variables={{ id }}
+				update={(cache, { data: { removeTask } }) => {
+					const { tasks } = cache.readQuery({ query: GET_TASKS });
+					cache.writeQuery({
+						query: GET_TASKS,
+						data: { tasks: tasks.filter(task => task.id !== id) },
+					});
+				}}
+			>
+				{removeTask => (
+					<ListItem>
+						<List>LIST</List>
+						<span>
+							<input
+								type="checkbox"
+								id={`toggle-complete-${id}`}
+								checked={this.state.completed}
+								onClick={this.handleToggleCompleted}
+							/>
+							<label htmlFor={`toggle-complete-${id}`} />
+						</span>
+						<span>{name}</span>
+						<span>{description}</span>
+						<span>{dueDate}</span>
+						<Controllers>
+							<span>
+								<Anchor to={`/me/edit/${id}`}>O</Anchor>
+							</span>
+							<span onClick={removeTask}>X</span>
+						</Controllers>
+					</ListItem>
+				)}
+			</Mutation>
+		);
+	}
+}
 
 export default Task;

@@ -67,7 +67,7 @@ const Topbar = styled.ul`
 							right: 0;
 							top: 0;
 							bottom: 0;
-							box-shadow: 0 0.5rem 0.7rem rgba(0, 0, 0, 0.2);
+							box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.2);
 						}
 					}
 				}
