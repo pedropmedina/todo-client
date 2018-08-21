@@ -125,65 +125,54 @@ const UPDATE_TASK = gql`
 	}
 `;
 
-class Task extends Component {
-	state = {
-		completed: this.props.completed || false,
-	};
-
-	handleToggleCompleted = (event, toggleCompleted) => {
-		const { checked } = event.target;
-		this.setState(() => ({ completed: checked }), toggleCompleted);
-	};
-
-	render() {
-		const { id, name, description, completed, dueDate } = this.props;
-		return (
-			<Mutation
-				mutation={REMOVE_TASK}
-				variables={{ id }}
-				update={(cache, { data: { removeTask } }) => {
-					const { tasks } = cache.readQuery({ query: GET_TASKS });
-					cache.writeQuery({
-						query: GET_TASKS,
-						data: { tasks: tasks.filter(task => task.id !== id) },
-					});
-				}}
-			>
-				{removeTask => (
-					<Mutation
-						mutation={UPDATE_TASK}
-						variables={{ input: { id, completed: this.state.completed } }}
-					>
-						{toggleCompleted => (
-							<ListItem completed={completed}>
-								<List>LIST</List>
+const Task = props => {
+	const { id, name, description, completed, dueDate } = props;
+	return (
+		<Mutation
+			mutation={REMOVE_TASK}
+			variables={{ id }}
+			update={(cache, { data: { removeTask } }) => {
+				const { tasks } = cache.readQuery({ query: GET_TASKS });
+				cache.writeQuery({
+					query: GET_TASKS,
+					data: { tasks: tasks.filter(task => task.id !== id) },
+				});
+			}}
+		>
+			{removeTask => (
+				<Mutation mutation={UPDATE_TASK}>
+					{toggleCompleted => (
+						<ListItem completed={completed}>
+							<List>LIST</List>
+							<span>
+								<input
+									type="checkbox"
+									id={`toggle-complete-${id}`}
+									checked={props.completed}
+									onChange={event => {
+										const { checked } = event.target;
+										toggleCompleted({
+											variables: { input: { id, completed: checked } },
+										});
+									}}
+								/>
+								<label htmlFor={`toggle-complete-${id}`} />
+							</span>
+							<span>{name}</span>
+							<span>{description}</span>
+							<span>{dueDate}</span>
+							<Controllers>
 								<span>
-									<input
-										type="checkbox"
-										id={`toggle-complete-${id}`}
-										checked={this.state.completed}
-										onChange={event => {
-											this.handleToggleCompleted(event, toggleCompleted);
-										}}
-									/>
-									<label htmlFor={`toggle-complete-${id}`} />
+									<Anchor to={`/me/edit/${id}`}>O</Anchor>
 								</span>
-								<span>{name}</span>
-								<span>{description}</span>
-								<span>{dueDate}</span>
-								<Controllers>
-									<span>
-										<Anchor to={`/me/edit/${id}`}>O</Anchor>
-									</span>
-									<span onClick={removeTask}>X</span>
-								</Controllers>
-							</ListItem>
-						)}
-					</Mutation>
-				)}
-			</Mutation>
-		);
-	}
-}
+								<span onClick={removeTask}>X</span>
+							</Controllers>
+						</ListItem>
+					)}
+				</Mutation>
+			)}
+		</Mutation>
+	);
+};
 
 export default Task;

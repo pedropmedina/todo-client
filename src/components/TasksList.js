@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
+import { Mutation } from 'react-apollo';
+import gql from 'graphql-tag';
 
 import Task from './Task';
 
@@ -85,29 +87,68 @@ const TableHeader = styled.header`
 	}
 `;
 
-const TasksList = props => (
-	<Wrapper>
-		<Preview>
-			<span>Preview todos and lists</span>
-			<span>Search</span>
-		</Preview>
-		<Table>
-			<TableHeader>
-				<h4>
-					<input type="checkbox" id="toggleAll" />
-					<label htmlFor="toggleAll" />
-				</h4>
-				<h4>Name</h4>
-				<h4>Description</h4>
-				<h4>Due on</h4>
-			</TableHeader>
-			<ul>
-				{props.tasks.map(({ id, ...task }) => (
-					<Task key={id} {...task} id={id} />
-				))}
-			</ul>
-		</Table>
-	</Wrapper>
-);
+const TOGGLE_ALL_COMPLETED = gql`
+	mutation ToggleAllCompleted($completed: Boolean!) {
+		toggleAllCompleted(completed: $completed) {
+			id
+			name
+			description
+			completed
+			dueDate
+		}
+	}
+`;
+
+class TasksList extends Component {
+	state = {
+		toggleAllCompleted: false,
+	};
+
+	handleToggleAllCompleted = (event, toggleAllCompleted) => {
+		const { checked } = event.target;
+		this.setState(() => ({ toggleAllCompleted: checked }), toggleAllCompleted);
+	};
+
+	render() {
+		return (
+			<Mutation
+				mutation={TOGGLE_ALL_COMPLETED}
+				variables={{ completed: this.state.toggleAllCompleted }}
+			>
+				{toggleAllCompleted => (
+					<Wrapper>
+						<Preview>
+							<span>Preview todos and lists</span>
+							<span>Search</span>
+						</Preview>
+						<Table>
+							<TableHeader>
+								<h4>
+									<input
+										type="checkbox"
+										id="toggleAll"
+										checked={this.state.toggleAllCompleted}
+										onChange={event =>
+											this.handleToggleAllCompleted(event, toggleAllCompleted)
+										}
+									/>
+									<label htmlFor="toggleAll" />
+								</h4>
+								<h4>Name</h4>
+								<h4>Description</h4>
+								<h4>Due on</h4>
+							</TableHeader>
+							<ul>
+								{this.props.tasks.map(({ id, ...task }) => (
+									<Task key={id} {...task} id={id} />
+								))}
+							</ul>
+						</Table>
+					</Wrapper>
+				)}
+			</Mutation>
+		);
+	}
+}
 
 export default TasksList;

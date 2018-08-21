@@ -41,11 +41,13 @@ const Topbar = styled.ul`
 
 					> input {
 						visibility: hidden;
+
 						&:checked + label {
 							background-color: rgb(60, 209, 134);
 						}
+
 						&:checked + label::after {
-							left: 0;
+							right: 0.1rem;
 						}
 					}
 
@@ -64,7 +66,6 @@ const Topbar = styled.ul`
 							border-radius: 50%;
 							background-color: white;
 							position: absolute;
-							right: 0;
 							top: 0;
 							bottom: 0;
 							box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.2);
