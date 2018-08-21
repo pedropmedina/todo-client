@@ -33,6 +33,7 @@ const GET_TASKS = gql`
 			id
 			name
 			description
+			completed
 			dueDate
 		}
 	}
@@ -42,6 +43,7 @@ const Dashboard = () => (
 	<Query query={GET_TASKS}>
 		{({ loading, error, data, client }) => {
 			if (loading) return <div>LOADING...</div>;
+			console.log(data.tasks);
 			return (
 				<React.Fragment>
 					<Header />

@@ -22,7 +22,7 @@ const Preview = styled.section`
 `;
 
 const Table = styled.section`
-	box-shadow: 0 01rem 2rem rgba(0, 0, 0, 0.1);
+	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
 `;
 
 const TableHeader = styled.header`

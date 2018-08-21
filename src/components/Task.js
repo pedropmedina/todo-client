@@ -8,6 +8,9 @@ const ListItem = styled.li`
 	display: flex;
 	justify-content: flex-start;
 	position: relative;
+	background-color: ${({ completed }) =>
+		completed ? 'rgb(238, 238, 238)' : 'initial'};
+	color: ${({ completed }) => (completed ? 'rgb(196, 196, 196)' : 'initial')};
 
 	> * {
 		flex: 9;
@@ -67,9 +70,9 @@ const ListItem = styled.li`
 		}
 	}
 
-	&:nth-child(even) {
+	/* &:nth-child(even) {
 		background-color: #eee;
-	}
+	} */
 
 	&:hover > span:last-child,
 	&:hover > span:first-child {
@@ -113,17 +116,27 @@ const GET_TASKS = gql`
 	}
 `;
 
+const UPDATE_TASK = gql`
+	mutation UpdateTask($input: UpdateTaskInput!) {
+		updateTask(input: $input) {
+			id
+			completed
+		}
+	}
+`;
+
 class Task extends Component {
 	state = {
-		completed: false,
+		completed: this.props.completed || false,
 	};
 
-	handleToggleCompleted = event => {
-		this.setState(({ completed }) => ({ completed: !completed }));
+	handleToggleCompleted = (event, toggleCompleted) => {
+		const { checked } = event.target;
+		this.setState(() => ({ completed: checked }), toggleCompleted);
 	};
 
 	render() {
-		const { id, name, description, dueDate } = this.props;
+		const { id, name, description, completed, dueDate } = this.props;
 		return (
 			<Mutation
 				mutation={REMOVE_TASK}
@@ -137,27 +150,36 @@ class Task extends Component {
 				}}
 			>
 				{removeTask => (
-					<ListItem>
-						<List>LIST</List>
-						<span>
-							<input
-								type="checkbox"
-								id={`toggle-complete-${id}`}
-								checked={this.state.completed}
-								onClick={this.handleToggleCompleted}
-							/>
-							<label htmlFor={`toggle-complete-${id}`} />
-						</span>
-						<span>{name}</span>
-						<span>{description}</span>
-						<span>{dueDate}</span>
-						<Controllers>
-							<span>
-								<Anchor to={`/me/edit/${id}`}>O</Anchor>
-							</span>
-							<span onClick={removeTask}>X</span>
-						</Controllers>
-					</ListItem>
+					<Mutation
+						mutation={UPDATE_TASK}
+						variables={{ input: { id, completed: this.state.completed } }}
+					>
+						{toggleCompleted => (
+							<ListItem completed={completed}>
+								<List>LIST</List>
+								<span>
+									<input
+										type="checkbox"
+										id={`toggle-complete-${id}`}
+										checked={this.state.completed}
+										onChange={event => {
+											this.handleToggleCompleted(event, toggleCompleted);
+										}}
+									/>
+									<label htmlFor={`toggle-complete-${id}`} />
+								</span>
+								<span>{name}</span>
+								<span>{description}</span>
+								<span>{dueDate}</span>
+								<Controllers>
+									<span>
+										<Anchor to={`/me/edit/${id}`}>O</Anchor>
+									</span>
+									<span onClick={removeTask}>X</span>
+								</Controllers>
+							</ListItem>
+						)}
+					</Mutation>
 				)}
 			</Mutation>
 		);
