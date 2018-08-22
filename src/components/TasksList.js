@@ -11,16 +11,7 @@ const Wrapper = styled.article`
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%); */
-	margin: 2rem auto;
-`;
-
-const Preview = styled.section`
-	padding: 1rem;
-	font-size: 1.6rem;
-	background-color: white;
-	color: #aeaeae;
-	display: flex;
-	justify-content: space-between;
+	margin: 10rem auto;
 `;
 
 const Table = styled.section`
@@ -29,8 +20,8 @@ const Table = styled.section`
 
 const TableHeader = styled.header`
 	display: flex;
-	justify-content: flex-start;
-	background-color: tomato;
+	justify-content: center;
+	background-color: #aaa;
 
 	> * {
 		flex: 9;
@@ -117,10 +108,6 @@ class TasksList extends Component {
 			>
 				{toggleAllCompleted => (
 					<Wrapper>
-						<Preview>
-							<span>Preview todos and lists</span>
-							<span>Search</span>
-						</Preview>
 						<Table>
 							<TableHeader>
 								<h4>
@@ -134,9 +121,7 @@ class TasksList extends Component {
 									/>
 									<label htmlFor="toggleAll" />
 								</h4>
-								<h4>Name</h4>
-								<h4>Description</h4>
-								<h4>Due on</h4>
+								<h4>todos's stats</h4>
 							</TableHeader>
 							<ul>
 								{this.props.tasks.map(({ id, ...task }) => (

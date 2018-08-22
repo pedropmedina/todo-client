@@ -5,7 +5,7 @@ import styled from 'styled-components';
 const HeaderWrapper = styled.header`
 	background: rgb(195, 57, 34);
 	background: linear-gradient(
-		180deg,
+		129deg,
 		rgba(195, 57, 34, 1) 0%,
 		rgba(254, 254, 254, 1) 100%
 	);
@@ -22,7 +22,7 @@ const Topbar = styled.ul`
 	color: white;
 	font-size: 1.2rem;
 	letter-spacing: 0.1rem;
-	box-shadow: 0 0.2rem 2rem rgba(0, 0, 0, 0.05);
+	/* box-shadow: 0 0.2rem 2rem rgba(0, 0, 0, 0.05); */
 
 	/* all outer li */
 	> * {
@@ -36,7 +36,7 @@ const Topbar = styled.ul`
 			> ul > li > span {
 				/* second span in li > ul > li containing input and label*/
 				&:last-child {
-					border-right: 0.1rem solid rgb(244, 89, 66);
+					border-right: 0.1rem solid rgba(255, 255, 255, 0.2);
 					padding-right: 1rem;
 
 					> input {
@@ -55,7 +55,7 @@ const Topbar = styled.ul`
 						display: inline-block;
 						width: 5rem;
 						height: 2.5rem;
-						background-color: rgb(244, 89, 66);
+						background-color: rgba(244, 89, 66, 0.5);
 						position: relative;
 						border-radius: 1.5rem;
 
