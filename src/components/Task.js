@@ -8,14 +8,16 @@ const ListItem = styled.li`
 	display: flex;
 	justify-content: flex-start;
 	position: relative;
-	background-color: ${({ completed }) =>
-		completed ? 'rgb(238, 238, 238)' : 'initial'};
+	/* background-color: ${({ completed }) =>
+		completed ? 'rgb(242, 242, 242)' : 'initial'}; */
 	color: ${({ completed }) => (completed ? 'rgb(196, 196, 196)' : 'initial')};
+	text-decoration: ${({ completed }) => (completed ? 'line-through' : 'none')};
+	border-bottom: 0.1rem solid #eee;
 
 	> * {
 		flex: 9;
-		padding: 2rem;
-		font-size: 1.2rem;
+		padding: 2.5rem 2rem;
+		font-size: 1.6rem;
 		letter-spacing: 0.1rem;
 
 		&:last-child {

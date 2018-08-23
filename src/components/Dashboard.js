@@ -6,7 +6,6 @@ import gql from 'graphql-tag';
 
 import Header from './Header';
 import TasksList from './TasksList';
-import Searchbar from './Searchbar';
 
 const AddButton = styled(Link)`
 	position: fixed;
@@ -48,7 +47,6 @@ const Dashboard = () => (
 			return (
 				<React.Fragment>
 					<Header />
-					<Searchbar />
 					<TasksList tasks={data.tasks} />
 					<AddButton to="/me/add">
 						<span>ADD</span>

@@ -11,17 +11,18 @@ const Wrapper = styled.article`
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%); */
-	margin: 10rem auto;
+	margin: 7rem auto 4rem auto;
 `;
 
 const Table = styled.section`
-	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+	/* box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2); */
 `;
 
 const TableHeader = styled.header`
 	display: flex;
-	justify-content: center;
-	background-color: #aaa;
+	justify-content: flex-start;
+	/* background-color: #eee; */
+	margin-bottom: 1.5rem;
 
 	> * {
 		flex: 9;
@@ -45,7 +46,7 @@ const TableHeader = styled.header`
 				z-index: 1;
 
 				&:checked + label::after {
-					background-color: white;
+					background-color: #aaa;
 				}
 			}
 
@@ -57,7 +58,7 @@ const TableHeader = styled.header`
 				display: inline-block;
 				width: 2rem;
 				height: 2rem;
-				border: 0.2rem solid white;
+				border: 0.2rem solid #aaa;
 				border-radius: 50%;
 
 				&::after {
@@ -121,7 +122,7 @@ class TasksList extends Component {
 									/>
 									<label htmlFor="toggleAll" />
 								</h4>
-								<h4>todos's stats</h4>
+								<h4 />
 							</TableHeader>
 							<ul>
 								{this.props.tasks.map(({ id, ...task }) => (
