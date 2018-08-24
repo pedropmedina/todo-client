@@ -98,7 +98,7 @@ class TaskForm extends Component {
 		fields: {
 			name: this.props.name || '',
 			description: this.props.description || '',
-			dueDate: this.props.dueDate || new Date(),
+			dueDate: this.props.dueDate || Date.now(),
 		},
 	};
 
@@ -161,11 +161,17 @@ class TaskForm extends Component {
 					/>
 					<div>
 						<DP
-							value={new Date(dueDate)}
+							value={dueDate ? new Date(dueDate) : null}
 							onChange={dueDate => {
 								const fields = this.state.fields;
-								fields['dueDate'] = dueDate.getTime();
-								this.setState({ fields });
+
+								if (dueDate) {
+									fields['dueDate'] = dueDate.getTime();
+									this.setState({ fields });
+								} else {
+									fields['dueDate'] = null;
+									this.setState({ fields });
+								}
 							}}
 						/>
 						<button>Add</button>

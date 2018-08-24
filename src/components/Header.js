@@ -215,10 +215,11 @@ const DRP = styled(DateRangePicker)`
 	}
 `;
 
-const GET_FILTER_AND_DATES = gql`
+const GET_FILTER_DATES_AND_CURRENTDATE = gql`
 	{
 		filter @client
 		dates @client
+		currentDate @client
 	}
 `;
 
@@ -226,11 +227,11 @@ const FILTER_TYPES = ['all', 'active', 'completed', 'calendar'];
 
 const Header = () => {
 	return (
-		<Query query={GET_FILTER_AND_DATES}>
+		<Query query={GET_FILTER_DATES_AND_CURRENTDATE}>
 			{({ loading, error, data, client }) => {
 				if (loading) return <div>Loading...</div>;
 
-				const { filter, dates } = data;
+				const { filter, dates, currentDate } = data;
 				return (
 					<HeaderWrapper filter={filter}>
 						<Topbar>
@@ -240,8 +241,8 @@ const Header = () => {
 							<span />
 						</Topbar>
 						<h3>
-							<span>{moment().format('ddd')},</span>
-							<span>{moment().format('MMM Do, YYYY')}</span>
+							<span>{moment(currentDate).format('ddd')},</span>
+							<span>{moment(currentDate).format('MMM Do, YYYY')}</span>
 						</h3>
 						{filter === 'all' ? (
 							<Summary>
@@ -259,10 +260,14 @@ const Header = () => {
 							<Summary>
 								<p>This is the preview for calendar...</p>
 								<DRP
-									value={dates.map(date => new Date(date))}
+									value={dates ? dates.map(date => new Date(date)) : null}
 									onChange={dates => {
-										const timeStamps = dates.map(date => date.getTime());
-										client.writeData({ data: { dates: timeStamps } });
+										if (dates) {
+											const timeStamps = dates.map(date => date.getTime());
+											client.writeData({ data: { dates: timeStamps } });
+										} else {
+											client.writeData({ data: { dates: null } });
+										}
 									}}
 								/>
 							</Summary>
@@ -274,7 +279,7 @@ const Header = () => {
 									<Tab
 										key={`FILTER_${filter}`}
 										filter={data.filter}
-										onClick={event => client.writeData({ data: { filter } })}
+										onClick={() => client.writeData({ data: { filter } })}
 									>
 										{filter}
 									</Tab>

@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { Mutation } from 'react-apollo';
+import { Mutation, Query } from 'react-apollo';
 import gql from 'graphql-tag';
+
+import filterTasks from '../selectors/filterTasks';
 
 import Task from './Task';
 
@@ -91,50 +93,61 @@ const TOGGLE_ALL_COMPLETED = gql`
 	}
 `;
 
-class TasksList extends Component {
-	state = {
-		toggleAllCompleted: false,
-	};
-
-	handleToggleAllCompleted = (event, toggleAllCompleted) => {
-		const { checked } = event.target;
-		this.setState(() => ({ toggleAllCompleted: checked }), toggleAllCompleted);
-	};
-
-	render() {
-		return (
-			<Mutation
-				mutation={TOGGLE_ALL_COMPLETED}
-				variables={{ completed: this.state.toggleAllCompleted }}
-			>
-				{toggleAllCompleted => (
-					<Wrapper>
-						<Table>
-							<TableHeader>
-								<h4>
-									<input
-										type="checkbox"
-										id="toggleAll"
-										checked={this.state.toggleAllCompleted}
-										onChange={event =>
-											this.handleToggleAllCompleted(event, toggleAllCompleted)
-										}
-									/>
-									<label htmlFor="toggleAll" />
-								</h4>
-								<h4 />
-							</TableHeader>
-							<ul>
-								{this.props.tasks.map(({ id, ...task }) => (
-									<Task key={id} {...task} id={id} />
-								))}
-							</ul>
-						</Table>
-					</Wrapper>
-				)}
-			</Mutation>
-		);
+const GET_FILTER_DATES_CURRENTDATE_AND_TOGGLEALLCOMPLETED = gql`
+	{
+		filter @client
+		dates @client
+		currentDate @client
+		toggleAllCompleted @client
 	}
-}
+`;
+
+const TasksList = props => (
+	<Query query={GET_FILTER_DATES_CURRENTDATE_AND_TOGGLEALLCOMPLETED}>
+		{({ loading, error, data, client }) => {
+			if (loading) return <div>Loading...</div>;
+
+			const { filter, dates, currentDate, toggleAllCompleted } = data;
+			const tasks = filterTasks(props.tasks, data);
+
+			return (
+				<Mutation
+					mutation={TOGGLE_ALL_COMPLETED}
+					variables={{ completed: toggleAllCompleted }}
+				>
+					{toggleAllCompleted => (
+						<Wrapper>
+							<Table>
+								<TableHeader>
+									<h4>
+										<input
+											type="checkbox"
+											id="toggleAll"
+											checked={data.toggleAllCompleted}
+											onChange={async event => {
+												const { checked } = event.target;
+												await client.writeData({
+													data: { toggleAllCompleted: checked },
+												});
+												toggleAllCompleted();
+											}}
+										/>
+										<label htmlFor="toggleAll" />
+									</h4>
+									<h4 />
+								</TableHeader>
+								<ul>
+									{tasks.map(({ id, ...task }) => (
+										<Task key={id} {...task} id={id} />
+									))}
+								</ul>
+							</Table>
+						</Wrapper>
+					)}
+				</Mutation>
+			);
+		}}
+	</Query>
+);
 
 export default TasksList;

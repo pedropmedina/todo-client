@@ -27,7 +27,9 @@ const client = new ApolloClient({
 	clientState: {
 		defaults: {
 			filter: 'all',
-			dates: [Date.now(), Date.now()],
+			dates: null,
+			currentDate: Date.now(),
+			toggleAllCompleted: false,
 		},
 	},
 });

@@ -8,8 +8,6 @@ const ListItem = styled.li`
 	display: flex;
 	justify-content: flex-start;
 	position: relative;
-	/* background-color: ${({ completed }) =>
-		completed ? 'rgb(242, 242, 242)' : 'initial'}; */
 	color: ${({ completed }) => (completed ? 'rgb(196, 196, 196)' : 'initial')};
 	text-decoration: ${({ completed }) => (completed ? 'line-through' : 'none')};
 	border-bottom: 0.1rem solid #eee;
@@ -71,10 +69,6 @@ const ListItem = styled.li`
 			}
 		}
 	}
-
-	/* &:nth-child(even) {
-		background-color: #eee;
-	} */
 
 	&:hover > span:last-child,
 	&:hover > span:first-child {
