@@ -6,32 +6,54 @@ import DatePicker from 'react-date-picker';
 const Form = styled.form`
 	width: 50rem;
 	position: absolute;
-	top: 50%;
+	top: 25%;
 	left: 50%;
-	transform: translate(-50%, -50%);
+	transform: translate(-50%, -25%);
 
 	> * {
 		width: 100%;
-
-		&:not(:last-child) {
-			height: 5rem;
-			margin-bottom: 3rem;
-			text-indent: 1rem;
-			font-size: 1.6rem;
-			letter-spacing: 0.1rem;
-			border: none;
-
-			&::placeholder {
-				color: #aeaeae;
-			}
-		}
+		height: 5rem;
+		margin-bottom: 3rem;
+		text-indent: 1rem;
+		font-size: 1.6rem;
+		letter-spacing: 0.1rem;
+		border: none;
+		border-left: 0.3rem solid transparent;
+		outline: none;
 
 		&:last-child {
-			border: none;
-			background-color: tomato;
-			color: white;
-			font-size: 1.6rem;
-			padding: 2rem;
+			display: flex;
+
+			> * {
+				flex: 1;
+			}
+
+			> button {
+				border: none;
+				border: 0.15rem solid #aeaeae;
+				color: #aeaeae;
+				font-size: 1.6rem;
+				outline: none;
+				transition: 0.2s;
+
+				&:hover {
+					border-color: #000;
+					color: #000;
+				}
+			}
+		}
+	}
+
+	> input {
+		transition: 0.2s;
+
+		&::placeholder {
+			color: #aeaeae;
+		}
+
+		&:focus {
+			border-left: 0.3rem solid #eee;
+			transform: translateX(0.5rem);
 		}
 	}
 `;
@@ -39,6 +61,14 @@ const Form = styled.form`
 const DP = styled(DatePicker)`
 	.react-date-picker__button {
 		border: none;
+		text-indent: initial;
+		padding-left: 1rem;
+	}
+
+	.react-calendar {
+		padding: 1rem;
+		border: none;
+		box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
 	}
 `;
 
@@ -118,26 +148,28 @@ class TaskForm extends Component {
 					<input
 						type="text"
 						name="name"
-						placeholder="name"
+						placeholder="What do you need?"
 						value={name}
 						onChange={this.handleInputFields}
 					/>
 					<input
 						type="text"
 						name="description"
-						placeholder="description"
+						placeholder="Too complex of a need? Add a description."
 						value={description}
 						onChange={this.handleInputFields}
 					/>
-					<DP
-						value={new Date(dueDate)}
-						onChange={dueDate => {
-							const fields = this.state.fields;
-							fields['dueDate'] = dueDate.getTime();
-							this.setState({ fields });
-						}}
-					/>
-					<button>Add</button>
+					<div>
+						<DP
+							value={new Date(dueDate)}
+							onChange={dueDate => {
+								const fields = this.state.fields;
+								fields['dueDate'] = dueDate.getTime();
+								this.setState({ fields });
+							}}
+						/>
+						<button>Add</button>
+					</div>
 				</Form>
 				<CancelButton to="/me/dashboard">
 					<span>CANCEL</span>
