@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import DatePicker from 'react-date-picker';
 
 const Form = styled.form`
 	width: 50rem;
@@ -35,6 +36,12 @@ const Form = styled.form`
 	}
 `;
 
+const DP = styled(DatePicker)`
+	.react-date-picker__button {
+		border: none;
+	}
+`;
+
 const CancelButton = styled(Link)`
 	position: fixed;
 	bottom: 10rem;
@@ -61,7 +68,7 @@ class TaskForm extends Component {
 		fields: {
 			name: this.props.name || '',
 			description: this.props.description || '',
-			dueDate: this.props.dueDate || '',
+			dueDate: this.props.dueDate || new Date(),
 		},
 	};
 
@@ -122,12 +129,13 @@ class TaskForm extends Component {
 						value={description}
 						onChange={this.handleInputFields}
 					/>
-					<input
-						type="text"
-						name="dueDate"
-						placeholder="dueDate"
-						value={dueDate}
-						onChange={this.handleInputFields}
+					<DP
+						value={new Date(dueDate)}
+						onChange={dueDate => {
+							const fields = this.state.fields;
+							fields['dueDate'] = dueDate.getTime();
+							this.setState({ fields });
+						}}
 					/>
 					<button>Add</button>
 				</Form>
