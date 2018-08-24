@@ -43,10 +43,9 @@ const Dashboard = () => (
 	<Query query={GET_TASKS}>
 		{({ loading, error, data, client }) => {
 			if (loading) return <div>LOADING...</div>;
-			console.log(data.tasks);
 			return (
 				<React.Fragment>
-					<Header />
+					<Header tasks={data.tasks} />
 					<TasksList tasks={data.tasks} />
 					<AddButton to="/me/add">
 						<span>ADD</span>

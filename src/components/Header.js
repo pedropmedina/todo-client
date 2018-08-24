@@ -5,6 +5,8 @@ import DateRangePicker from '@wojtekmaj/react-daterange-picker';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 
+import tasksSummary from '../selectors/tasksSummary';
+
 const HeaderWrapper = styled.header`
 	height: 35rem;
 	background-color: #eee;
@@ -225,7 +227,7 @@ const GET_FILTER_DATES_AND_CURRENTDATE = gql`
 
 const FILTER_TYPES = ['all', 'active', 'completed', 'calendar'];
 
-const Header = () => {
+const Header = props => {
 	return (
 		<Query query={GET_FILTER_DATES_AND_CURRENTDATE}>
 			{({ loading, error, data, client }) => {
@@ -246,19 +248,19 @@ const Header = () => {
 						</h3>
 						{filter === 'all' ? (
 							<Summary>
-								<p>This is the preview for all...</p>
+								<p>{tasksSummary(props.tasks, data)}</p>
 							</Summary>
 						) : filter === 'active' ? (
 							<Summary>
-								<p>This is the preview for active...</p>
+								<p>{tasksSummary(props.tasks, data)}</p>
 							</Summary>
 						) : filter === 'completed' ? (
 							<Summary>
-								<p>This is the preview for completed...</p>
+								<p>{tasksSummary(props.tasks, data)}</p>
 							</Summary>
 						) : filter === 'calendar' ? (
 							<Summary>
-								<p>This is the preview for calendar...</p>
+								<p>{tasksSummary(props.tasks, data)}</p>
 								<DRP
 									value={dates ? dates.map(date => new Date(date)) : null}
 									onChange={dates => {
