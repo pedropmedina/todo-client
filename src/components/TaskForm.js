@@ -10,6 +10,19 @@ const Form = styled.form`
 	left: 50%;
 	transform: translate(-50%, -25%);
 
+	> input {
+		transition: 0.2s;
+
+		&::placeholder {
+			color: #aeaeae;
+		}
+
+		&:focus {
+			border-left: 0.3rem solid #eee;
+			transform: translateX(0.5rem);
+		}
+	}
+
 	> * {
 		width: 100%;
 		height: 5rem;
@@ -21,7 +34,7 @@ const Form = styled.form`
 		border-left: 0.3rem solid transparent;
 		outline: none;
 
-		&:last-child {
+		&:nth-child(3) {
 			display: flex;
 
 			> * {
@@ -42,18 +55,25 @@ const Form = styled.form`
 				}
 			}
 		}
-	}
 
-	> input {
-		transition: 0.2s;
+		&:nth-child(4) {
+			display: flex;
+			justify-content: center;
+			margin-top: 5rem;
 
-		&::placeholder {
-			color: #aeaeae;
-		}
+			> * {
+				width: 10rem;
+				margin: 0 1rem;
+				border: none;
+				border: 0.15rem solid #aeaeae;
+				color: #aeaeae;
+				transition: 0.2s;
 
-		&:focus {
-			border-left: 0.3rem solid #eee;
-			transform: translateX(0.5rem);
+				&:hover {
+					border: 0.15rem solid #000;
+					color: #000;
+				}
+			}
 		}
 	}
 `;
@@ -175,6 +195,10 @@ class TaskForm extends Component {
 							}}
 						/>
 						<button>Add</button>
+					</div>
+					<div>
+						<button type="button">Show list</button>
+						<button type="button">Add list</button>
 					</div>
 				</Form>
 				<CancelButton to="/me/dashboard">
