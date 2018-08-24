@@ -12,10 +12,6 @@ injectGlobal`
 	html {
 		font-size: 62.5%;
 		height: 100%;
-		/* padding: 2rem;
-		background: rgb(238,174,189);
-		background: radial-gradient(circle, rgba(238,174,189,1) 0%, rgba(233,204,148,1) 100%); */
-
 	}
 	body {
 		box-sizing: border-box;

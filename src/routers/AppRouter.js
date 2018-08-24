@@ -24,6 +24,12 @@ const client = new ApolloClient({
 			headers: { authorization: token ? `Bearer ${token}` : '' },
 		});
 	},
+	clientState: {
+		defaults: {
+			filter: 'all',
+			dates: [Date.now(), Date.now()],
+		},
+	},
 });
 
 const AppRouter = ({ history }) => (

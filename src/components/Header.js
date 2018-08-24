@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import styled, { css } from 'styled-components';
 import moment from 'moment';
 import DateRangePicker from '@wojtekmaj/react-daterange-picker';
+import { Query } from 'react-apollo';
+import gql from 'graphql-tag';
 
 const HeaderWrapper = styled.header`
 	height: 35rem;
@@ -213,73 +215,77 @@ const DRP = styled(DateRangePicker)`
 	}
 `;
 
+const GET_FILTER_AND_DATES = gql`
+	{
+		filter @client
+		dates @client
+	}
+`;
+
 const FILTER_TYPES = ['all', 'active', 'completed', 'calendar'];
 
-class Header extends Component {
-	state = {
-		filter: 'all',
-		date: [new Date(), new Date()],
-	};
+const Header = () => {
+	return (
+		<Query query={GET_FILTER_AND_DATES}>
+			{({ loading, error, data, client }) => {
+				if (loading) return <div>Loading...</div>;
 
-	handleFilter = (event, filter) => {
-		this.setState(() => ({ filter }));
-	};
+				const { filter, dates } = data;
+				return (
+					<HeaderWrapper filter={filter}>
+						<Topbar>
+							<span>
+								<input type="text" placeholder="search..." />
+							</span>
+							<span />
+						</Topbar>
+						<h3>
+							<span>{moment().format('ddd')},</span>
+							<span>{moment().format('MMM Do, YYYY')}</span>
+						</h3>
+						{filter === 'all' ? (
+							<Summary>
+								<p>This is the preview for all...</p>
+							</Summary>
+						) : filter === 'active' ? (
+							<Summary>
+								<p>This is the preview for active...</p>
+							</Summary>
+						) : filter === 'completed' ? (
+							<Summary>
+								<p>This is the preview for completed...</p>
+							</Summary>
+						) : filter === 'calendar' ? (
+							<Summary>
+								<p>This is the preview for calendar...</p>
+								<DRP
+									value={dates.map(date => new Date(date))}
+									onChange={dates => {
+										const timeStamps = dates.map(date => date.getTime());
+										client.writeData({ data: { dates: timeStamps } });
+									}}
+								/>
+							</Summary>
+						) : null}
 
-	render() {
-		const { filter, date } = this.state;
-		return (
-			<HeaderWrapper filter={filter}>
-				<Topbar>
-					<span>
-						<input type="text" placeholder="search..." />
-					</span>
-					<span />
-				</Topbar>
-				<h3>
-					<span>{moment().format('ddd')},</span>
-					<span>{moment().format('MMM Do, YYYY')}</span>
-				</h3>
-				{filter === 'all' ? (
-					<Summary>
-						<p>This is the preview for all...</p>
-					</Summary>
-				) : filter === 'active' ? (
-					<Summary>
-						<p>This is the preview for active...</p>
-					</Summary>
-				) : filter === 'completed' ? (
-					<Summary>
-						<p>This is the preview for completed...</p>
-					</Summary>
-				) : filter === 'calendar' ? (
-					<Summary>
-						<p>This is the preview for calendar...</p>
-						<DRP
-							value={date}
-							onChange={date => {
-								console.log(date);
-								return this.setState({ date });
-							}}
-						/>
-					</Summary>
-				) : null}
-
-				<Filterbar>
-					<FilterTabs>
-						{FILTER_TYPES.map(filter => (
-							<Tab
-								key={`FILTER_${filter}`}
-								filter={this.state.filter}
-								onClick={event => this.handleFilter(event, filter)}
-							>
-								{filter}
-							</Tab>
-						))}
-					</FilterTabs>
-				</Filterbar>
-			</HeaderWrapper>
-		);
-	}
-}
+						<Filterbar>
+							<FilterTabs>
+								{FILTER_TYPES.map(filter => (
+									<Tab
+										key={`FILTER_${filter}`}
+										filter={data.filter}
+										onClick={event => client.writeData({ data: { filter } })}
+									>
+										{filter}
+									</Tab>
+								))}
+							</FilterTabs>
+						</Filterbar>
+					</HeaderWrapper>
+				);
+			}}
+		</Query>
+	);
+};
 
 export default Header;
