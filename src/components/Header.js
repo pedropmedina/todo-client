@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import styled, { css } from 'styled-components';
+import moment from 'moment';
+import DateRangePicker from '@wojtekmaj/react-daterange-picker';
 
 const HeaderWrapper = styled.header`
-	height: 30rem;
+	height: 35rem;
 	background-color: #eee;
 	position: relative;
 	display: flex;
@@ -31,10 +33,63 @@ const HeaderWrapper = styled.header`
 						: false};
 
 	> h3 {
-		border-right: 0.1rem solid #fff;
-		padding: 2rem;
-		margin-right: 2rem;
+		border-right: 0.2rem solid #fff;
+		padding: 2rem 5rem;
+		margin-right: 5rem;
 		font-size: 3rem;
+		letter-spacing: 0.2rem;
+
+		> span {
+			display: block;
+			margin-bottom: 0.5rem;
+			font-weight: 500;
+
+			&:last-child {
+				font-size: 2rem;
+				font-weight: 300;
+			}
+		}
+	}
+`;
+
+const Topbar = styled.div`
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	display: flex;
+	justify-content: flex-end;
+	padding: 1rem;
+
+	> span {
+		margin-right: 3rem;
+		height: 3rem;
+
+		&:first-child {
+			width: 20rem;
+
+			> input {
+				width: 100%;
+				height: 100%;
+				border: none;
+				text-indent: 1rem;
+				background-color: rgba(255, 255, 255, 0.2);
+				color: #fff;
+				letter-spacing: 0.1rem;
+				font-size: 1.2rem;
+				outline: none;
+
+				&::placeholder {
+					color: rgba(255, 255, 255, 0.5);
+				}
+			}
+		}
+
+		&:last-child {
+			width: 3rem;
+			border-radius: 50%;
+			background-color: rgba(255, 255, 255, 0.2);
+		}
 	}
 `;
 
@@ -125,11 +180,45 @@ const Tab = styled.li`
 	}
 `;
 
+const Summary = styled.div`
+	> p {
+		padding: 2rem 0;
+		font-size: 2rem;
+		text-decoration: underline rgba(255, 255, 255, 0.2);
+	}
+`;
+
+const DRP = styled(DateRangePicker)`
+	.react-daterange-picker__button {
+		background-color: rgba(255, 255, 255, 0.2);
+		color: transparent;
+		border: none;
+		padding: 1rem;
+	}
+
+	.react-date-picker__button__input > * {
+		font-size: 1.6rem;
+		color: #000;
+	}
+
+	.react-calendar {
+		border: none;
+		padding: 1rem;
+		box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.09);
+	}
+
+	.react-calendar__month-view__weekdays {
+		color: #aaa;
+		font-size: 1.2rem;
+	}
+`;
+
 const FILTER_TYPES = ['all', 'active', 'completed', 'calendar'];
 
 class Header extends Component {
 	state = {
 		filter: 'all',
+		date: [new Date(), new Date()],
 	};
 
 	handleFilter = (event, filter) => {
@@ -137,28 +226,42 @@ class Header extends Component {
 	};
 
 	render() {
-		const { filter } = this.state;
+		const { filter, date } = this.state;
 		return (
 			<HeaderWrapper filter={filter}>
-				<h3>{Date.now()}</h3>
+				<Topbar>
+					<span>
+						<input type="text" placeholder="search..." />
+					</span>
+					<span />
+				</Topbar>
+				<h3>
+					<span>{moment().format('ddd')},</span>
+					<span>{moment().format('MMM Do, YYYY')}</span>
+				</h3>
 				{filter === 'all' ? (
-					<div>
+					<Summary>
 						<p>This is the preview for all...</p>
-					</div>
+					</Summary>
 				) : filter === 'active' ? (
-					<div>
+					<Summary>
 						<p>This is the preview for active...</p>
-					</div>
+					</Summary>
 				) : filter === 'completed' ? (
-					<div>
+					<Summary>
 						<p>This is the preview for completed...</p>
-					</div>
+					</Summary>
 				) : filter === 'calendar' ? (
-					<div>
+					<Summary>
 						<p>This is the preview for calendar...</p>
-						<input type="text" placeholder="start date" />
-						<input type="text" placeholder="end date" />
-					</div>
+						<DRP
+							value={date}
+							onChange={date => {
+								console.log(date);
+								return this.setState({ date });
+							}}
+						/>
+					</Summary>
 				) : null}
 
 				<Filterbar>

@@ -24,12 +24,13 @@
 		"webpack-merge": "^4.1.4"
 	},
 	"dependencies": {
+		"@wojtekmaj/react-daterange-picker": "^1.1.0",
 		"apollo-boost": "^0.1.13",
 		"babel-polyfill": "^6.26.0",
 		"graphql": "^0.13.2",
 		"graphql-tag": "^2.9.2",
 		"history": "^4.7.2",
-		"popmotion-pose": "^2.1.2",
+		"moment": "^2.22.2",
 		"react": "^16.4.2",
 		"react-apollo": "^2.1.11",
 		"react-dom": "^16.4.2",
