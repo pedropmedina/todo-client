@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { Mutation } from 'react-apollo';
-import gql from 'graphql-tag';
 
 const Form = styled.form`
 	width: 100%;
@@ -49,37 +47,11 @@ const Form = styled.form`
 	}
 `;
 
-const NEW_LIST = gql`
-	mutation NewList($input: NewListInput!) {
-		newList(input: $input) {
-			id
-			content
-			task {
-				id
-			}
-		}
-	}
-`;
-
-const GET_LISTS = gql`
-	query {
-		lists: findLists {
-			id
-			content
-			task {
-				id
-			}
-		}
-	}
-`;
-
 class ListForm extends Component {
 	state = {
 		fields: {
 			content: '',
-			task: this.props.task || '',
 		},
-		listText: '',
 	};
 
 	handleFields = event => {
@@ -90,40 +62,25 @@ class ListForm extends Component {
 	};
 
 	render() {
-		const { content, task } = this.state.fields;
+		const { content } = this.state.fields;
 		return (
-			<Mutation
-				mutation={NEW_LIST}
-				update={async (cache, { data: { newList } }) => {
-					// const d = await cache.readQuery({ query: GET_LISTS });
-					// cache.writeQuery({
-					// 	query: GET_LISTS,
-					// 	data: { lists: [...lists, newList] },
-					// });
-				}}
-			>
-				{newList => {
-					return (
-						<React.Fragment>
-							<Form
-								onSubmit={event => {
-									event.preventDefault();
-									newList({ variables: { input: { content, task } } });
-								}}
-							>
-								<input
-									type="text"
-									placeholder="Go ahead and add to your list."
-									name="content"
-									value={content}
-									onChange={this.handleFields}
-								/>
-								<button type="button">Save list</button>
-							</Form>
-						</React.Fragment>
-					);
-				}}
-			</Mutation>
+			<React.Fragment>
+				<Form
+					onSubmit={event => {
+						event.preventDefault();
+						this.props.newList(content);
+					}}
+				>
+					<input
+						type="text"
+						placeholder="Go ahead and add to your list."
+						name="content"
+						value={content}
+						onChange={this.handleFields}
+					/>
+					<button type="button">Save list</button>
+				</Form>
+			</React.Fragment>
 		);
 	}
 }

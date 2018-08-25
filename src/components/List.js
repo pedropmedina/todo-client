@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import posed from 'react-pose';
+import { Query, Mutation } from 'react-apollo';
+import gql from 'graphql-tag';
 
 import ListForm from './ListForm';
 
@@ -37,13 +39,82 @@ const config = {
 
 const PosedWrapper = posed(ListWrapper)(config);
 
+const FIND_TASK = gql`
+	query FindTaskById($id: ID!) {
+		task: findTask(id: $id) {
+			id
+			name
+			description
+			dueDate
+			lists {
+				id
+				content
+			}
+		}
+	}
+`;
+
+const NEW_LIST = gql`
+	mutation NewList($input: NewListInput!) {
+		newList(input: $input) {
+			id
+			content
+			task {
+				id
+			}
+		}
+	}
+`;
+
+const GET_LISTS = gql`
+	query {
+		lists: findLists {
+			id
+			content
+			task {
+				id
+				name
+				description
+			}
+		}
+	}
+`;
+
 const List = ({ openList, task }) => (
-	<PosedWrapper pose={openList ? 'visible' : 'hidden'}>
-		<ListForm task={task} />
-		<ListItems>
-			<li>One item</li>
-		</ListItems>
-	</PosedWrapper>
+	<Query query={FIND_TASK} variables={{ id: task }}>
+		{({ loading, data }) => {
+			if (loading) return <div>Loading...</div>;
+			return (
+				<Mutation
+					mutation={NEW_LIST}
+					update={(cache, { data: { newList } }) => {
+						const { lists } = cache.readQuery({ query: GET_LISTS });
+						cache.writeQuery({
+							query: GET_LISTS,
+							data: { lists: [...lists, newList] },
+						});
+					}}
+				>
+					{newList => {
+						return (
+							<PosedWrapper pose={openList ? 'visible' : 'hidden'}>
+								<ListForm
+									newList={content =>
+										newList({ variables: { input: { content, task } } })
+									}
+								/>
+								<ListItems>
+									{data.task.lists.map(({ id, content }) => (
+										<li key={id}>{content}</li>
+									))}
+								</ListItems>
+							</PosedWrapper>
+						);
+					}}
+				</Mutation>
+			);
+		}}
+	</Query>
 );
 
 export default List;
