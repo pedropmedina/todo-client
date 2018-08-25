@@ -26,20 +26,42 @@ const UPDATE_TASK = gql`
 	}
 `;
 
+const GET_LOCAL_STATE = gql`
+	{
+		openList @client
+	}
+`;
+
+const onOpenList = client => {
+	client.writeData({ data: { openList: true } });
+};
+
 const EditTask = props => (
 	<React.Fragment>
-		<Query query={FIND_TASK} variables={{ id: props.match.params.id }}>
-			{({ loading, error, data }) => {
-				if (loading) return <div>LOADING...</div>;
+		<Query query={GET_LOCAL_STATE}>
+			{({ data, client }) => {
 				return (
-					<Mutation
-						mutation={UPDATE_TASK}
-						onCompleted={data => {
-							props.history.push('/me/dashboard');
+					<Query query={FIND_TASK} variables={{ id: props.match.params.id }}>
+						{({ data: data1 }) => {
+							return (
+								<Mutation
+									mutation={UPDATE_TASK}
+									onCompleted={data => {
+										props.history.push('/me/dashboard');
+									}}
+								>
+									{updateTask => (
+										<TaskForm
+											{...data1.task}
+											{...data}
+											updateTask={updateTask}
+											onOpenList={() => onOpenList(client)}
+										/>
+									)}
+								</Mutation>
+							);
 						}}
-					>
-						{updateTask => <TaskForm {...data.task} updateTask={updateTask} />}
-					</Mutation>
+					</Query>
 				);
 			}}
 		</Query>

@@ -3,12 +3,19 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import DatePicker from 'react-date-picker';
 
+import List from './List';
+
+const Wrapper = styled.div`
+	padding-top: 7rem;
+`;
+
 const Form = styled.form`
 	width: 50rem;
-	position: absolute;
+	margin: 0 auto 7rem auto;
+	/* position: absolute;
 	top: 25%;
 	left: 50%;
-	transform: translate(-50%, -25%);
+	transform: translate(-50%, -25%); */
 
 	> input {
 		transition: 0.2s;
@@ -131,8 +138,9 @@ class TaskForm extends Component {
 
 	render() {
 		const { name, description, dueDate } = this.state.fields;
+		const { openList } = this.props;
 		return (
-			<React.Fragment>
+			<Wrapper>
 				<Form
 					onSubmit={event => {
 						event.preventDefault();
@@ -196,15 +204,25 @@ class TaskForm extends Component {
 						/>
 						<button>Add</button>
 					</div>
-					<div>
-						<button type="button">Show list</button>
-						<button type="button">Add list</button>
-					</div>
+
+					{this.props.name ? (
+						<div>
+							<button type="button">Show list</button>
+							<button type="button" onClick={this.props.onOpenList}>
+								Add list
+							</button>
+						</div>
+					) : null}
 				</Form>
+
+				{this.props.name ? (
+					<List openList={openList} task={this.props.id} />
+				) : null}
+
 				<CancelButton to="/me/dashboard">
 					<span>CANCEL</span>
 				</CancelButton>
-			</React.Fragment>
+			</Wrapper>
 		);
 	}
 }

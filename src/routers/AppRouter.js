@@ -30,6 +30,7 @@ const client = new ApolloClient({
 			dates: null,
 			currentDate: Date.now(),
 			toggleAllCompleted: false,
+			openList: false,
 		},
 	},
 });
