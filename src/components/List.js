@@ -66,16 +66,11 @@ const NEW_LIST = gql`
 	}
 `;
 
-const GET_LISTS = gql`
+const FIND_LISTS = gql`
 	query {
 		lists: findLists {
 			id
 			content
-			task {
-				id
-				name
-				description
-			}
 		}
 	}
 `;
@@ -88,10 +83,16 @@ const List = ({ openList, task }) => (
 				<Mutation
 					mutation={NEW_LIST}
 					update={(cache, { data: { newList } }) => {
-						const { lists } = cache.readQuery({ query: GET_LISTS });
+						const { task: taskInCache } = cache.readQuery({
+							query: FIND_TASK,
+							variables: { id: task },
+						});
+						taskInCache.lists.push(newList);
+
 						cache.writeQuery({
-							query: GET_LISTS,
-							data: { lists: [...lists, newList] },
+							query: FIND_TASK,
+							variables: { id: task },
+							data: { task: taskInCache },
 						});
 					}}
 				>
@@ -100,7 +101,9 @@ const List = ({ openList, task }) => (
 							<PosedWrapper pose={openList ? 'visible' : 'hidden'}>
 								<ListForm
 									newList={content =>
-										newList({ variables: { input: { content, task } } })
+										newList({
+											variables: { input: { content, task } },
+										})
 									}
 								/>
 								<ListItems>

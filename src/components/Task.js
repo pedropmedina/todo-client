@@ -155,8 +155,6 @@ const Task = props => {
 								<label htmlFor={`toggle-complete-${id}`} />
 							</span>
 							<span>{name}</span>
-							{/* <span>{description}</span>
-							<span>{dueDate}</span> */}
 							<Controllers>
 								<span>
 									<Anchor to={`/me/edit/${id}`}>O</Anchor>
