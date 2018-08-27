@@ -6,7 +6,7 @@ import styled, { injectGlobal } from 'styled-components';
 import AppRouter from './routers/AppRouter';
 
 // expose history api to be passed to Router and used accross app
-const history = createHistory();
+export const history = createHistory();
 
 injectGlobal`
 	html {
@@ -33,4 +33,7 @@ injectGlobal`
 // "warning: You cannot change <Router history>"
 // while using hot module reload
 
-ReactDOM.render(<AppRouter />, document.getElementById('root'));
+ReactDOM.render(
+	<AppRouter history={history} />,
+	document.getElementById('root'),
+);

@@ -29,22 +29,6 @@ const Form = styled.form`
 			transform: translateX(0.5rem);
 		}
 	}
-
-	> button {
-		border: none;
-		border: 0.2rem solid #aaa;
-		padding: 1rem;
-		background-color: inherit;
-		position: absolute;
-		right: 0;
-		top: 0;
-		bottom: 0;
-		width: 20%;
-
-		&:hover {
-			border: 0.2rem solid #000;
-		}
-	}
 `;
 
 class ListForm extends Component {
@@ -69,6 +53,8 @@ class ListForm extends Component {
 					onSubmit={event => {
 						event.preventDefault();
 						this.props.newList(content);
+						const fields = { content: '' };
+						this.setState({ fields });
 					}}
 				>
 					<input
@@ -78,7 +64,6 @@ class ListForm extends Component {
 						value={content}
 						onChange={this.handleFields}
 					/>
-					<button type="button">Save list</button>
 				</Form>
 			</React.Fragment>
 		);

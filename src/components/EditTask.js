@@ -11,6 +11,9 @@ const FIND_TASK = gql`
 			name
 			description
 			dueDate
+			lists {
+				id
+			}
 		}
 	}
 `;
@@ -36,6 +39,10 @@ const onOpenList = client => {
 	client.writeData({ data: { openList: true } });
 };
 
+const onCloseList = client => {
+	client.writeData({ data: { openList: false } });
+};
+
 const EditTask = props => (
 	<React.Fragment>
 		<Query query={GET_LOCAL_STATE}>
@@ -47,6 +54,7 @@ const EditTask = props => (
 								<Mutation
 									mutation={UPDATE_TASK}
 									onCompleted={data => {
+										client.writeData({ data: { openList: false } });
 										props.history.push('/me/dashboard');
 									}}
 								>
@@ -56,6 +64,7 @@ const EditTask = props => (
 											{...data}
 											updateTask={updateTask}
 											onOpenList={() => onOpenList(client)}
+											onCloseList={() => onCloseList(client)}
 										/>
 									)}
 								</Mutation>

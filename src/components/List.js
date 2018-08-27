@@ -4,20 +4,39 @@ import posed from 'react-pose';
 import { Query, Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
 
+import { history } from '../index';
+
 import ListForm from './ListForm';
 
 const ListWrapper = styled.div`
 	width: 70rem;
 	margin: 3rem auto;
-	/* border: 0.1rem solid #eee; */
 	background-color: #eee;
-	padding: 2rem;
+	padding: 3rem;
+
+	button {
+		border: none;
+		border: 0.2rem solid #aaa;
+		padding: 1rem;
+		background-color: inherit;
+		width: 20%;
+		margin-top: 2.5rem;
+
+		&:hover {
+			border: 0.2rem solid #000;
+		}
+	}
 `;
 
 const ListItems = styled.ul`
 	margin-top: 2rem;
 	list-style: none;
 	font-size: 1.6rem;
+
+	> li {
+		border-bottom: 0.1rem solid #ddd;
+		padding: 1rem 0;
+	}
 `;
 
 const config = {
@@ -66,18 +85,9 @@ const NEW_LIST = gql`
 	}
 `;
 
-const FIND_LISTS = gql`
-	query {
-		lists: findLists {
-			id
-			content
-		}
-	}
-`;
-
 const List = ({ openList, task }) => (
 	<Query query={FIND_TASK} variables={{ id: task }}>
-		{({ loading, data }) => {
+		{({ loading, data, client }) => {
 			if (loading) return <div>Loading...</div>;
 			return (
 				<Mutation
@@ -110,6 +120,16 @@ const List = ({ openList, task }) => (
 									{data.task.lists.map(({ id, content }) => (
 										<li key={id}>{content}</li>
 									))}
+
+									<button
+										type="button"
+										onClick={() => {
+											client.writeData({ data: { openList: false } });
+											history.push('/me/dashboard');
+										}}
+									>
+										Save list
+									</button>
 								</ListItems>
 							</PosedWrapper>
 						);

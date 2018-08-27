@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-	BrowserRouter as Router,
-	Route,
-	Switch,
-	Redirect,
-} from 'react-router-dom';
+import { Router, Route, Switch, Redirect } from 'react-router-dom';
 import { hot } from 'react-hot-loader';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from 'react-apollo';
@@ -36,7 +31,7 @@ const client = new ApolloClient({
 });
 
 const AppRouter = ({ history }) => (
-	<Router>
+	<Router history={history}>
 		<Route
 			render={({ location, match }) => (
 				<ApolloProvider client={client}>

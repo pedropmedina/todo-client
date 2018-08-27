@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import DatePicker from 'react-date-picker';
 
@@ -67,20 +67,6 @@ const Form = styled.form`
 			display: flex;
 			justify-content: center;
 			margin-top: 5rem;
-
-			> * {
-				width: 10rem;
-				margin: 0 1rem;
-				border: none;
-				border: 0.15rem solid #aeaeae;
-				color: #aeaeae;
-				transition: 0.2s;
-
-				&:hover {
-					border: 0.15rem solid #000;
-					color: #000;
-				}
-			}
 		}
 	}
 `;
@@ -118,6 +104,34 @@ const CancelButton = styled(Link)`
 		left: 50%;
 		transform: translate(-50%, -50%);
 	}
+`;
+
+const ListButton = styled.button`
+	width: 10rem;
+	margin: 0 1rem;
+	border: none;
+	border: 0.15rem solid #aeaeae;
+	color: #aeaeae;
+	transition: 0.2s;
+
+	&:hover {
+		border: 0.15rem solid #000;
+		color: #000;
+	}
+
+	${props =>
+		props.disabled &&
+		css`
+			background-color: #eee;
+			color: #fff;
+			border: none;
+
+			&:hover {
+				border: none;
+				color: #fff;
+				cursor: not-allowed;
+			}
+		`};
 `;
 
 class TaskForm extends Component {
@@ -207,10 +221,20 @@ class TaskForm extends Component {
 
 					{this.props.name ? (
 						<div>
-							<button type="button">Show list</button>
-							<button type="button" onClick={this.props.onOpenList}>
+							<ListButton
+								type="button"
+								disabled={!this.props.lists.length}
+								onClick={this.props.onOpenList}
+							>
+								Show list
+							</ListButton>
+							<ListButton
+								type="button"
+								disabled={!!this.props.lists.length}
+								onClick={this.props.onOpenList}
+							>
 								Add list
-							</button>
+							</ListButton>
 						</div>
 					) : null}
 				</Form>
@@ -219,7 +243,7 @@ class TaskForm extends Component {
 					<List openList={openList} task={this.props.id} />
 				) : null}
 
-				<CancelButton to="/me/dashboard">
+				<CancelButton onClick={this.props.onCloseList} to="/me/dashboard">
 					<span>CANCEL</span>
 				</CancelButton>
 			</Wrapper>
