@@ -67,6 +67,20 @@ const Form = styled.form`
 			display: flex;
 			justify-content: center;
 			margin-top: 5rem;
+
+			> button {
+				width: 10rem;
+				margin: 0 1rem;
+				border: none;
+				border: 0.15rem solid #aeaeae;
+				color: #aeaeae;
+				transition: 0.2s;
+
+				&:hover {
+					border: 0.15rem solid #000;
+					color: #000;
+				}
+			}
 		}
 	}
 `;
@@ -104,34 +118,6 @@ const CancelButton = styled(Link)`
 		left: 50%;
 		transform: translate(-50%, -50%);
 	}
-`;
-
-const ListButton = styled.button`
-	width: 10rem;
-	margin: 0 1rem;
-	border: none;
-	border: 0.15rem solid #aeaeae;
-	color: #aeaeae;
-	transition: 0.2s;
-
-	&:hover {
-		border: 0.15rem solid #000;
-		color: #000;
-	}
-
-	${props =>
-		props.disabled &&
-		css`
-			background-color: #eee;
-			color: #fff;
-			border: none;
-
-			&:hover {
-				border: none;
-				color: #fff;
-				cursor: not-allowed;
-			}
-		`};
 `;
 
 class TaskForm extends Component {
@@ -221,20 +207,15 @@ class TaskForm extends Component {
 
 					{this.props.name ? (
 						<div>
-							<ListButton
-								type="button"
-								disabled={!this.props.lists.length}
-								onClick={this.props.onOpenList}
-							>
-								Show list
-							</ListButton>
-							<ListButton
-								type="button"
-								disabled={!!this.props.lists.length}
-								onClick={this.props.onOpenList}
-							>
-								Add list
-							</ListButton>
+							{!!this.props.lists.length ? (
+								<button type="button" onClick={this.props.onOpenList}>
+									Show list
+								</button>
+							) : (
+								<button type="button" onClick={this.props.onOpenList}>
+									Add list
+								</button>
+							)}
 						</div>
 					) : null}
 				</Form>
