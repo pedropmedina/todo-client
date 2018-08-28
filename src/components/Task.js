@@ -19,57 +19,56 @@ const ListItem = styled.li`
 		padding: 2.5rem 2rem;
 		font-size: 1.6rem;
 		letter-spacing: 0.1rem;
-
-		/* span containing input and label */
-		&:nth-child(2) {
-			flex: 1;
-			position: relative;
-
-			> input {
-				position: absolute;
-				top: 50%;
-				left: 50%;
-				transform: translate(-50%, -50%);
-				visibility: hidden;
-				z-index: 1;
-
-				&:checked + label::after {
-					background-color: rgba(195, 57, 34, 0.5);
-				}
-			}
-
-			> label {
-				position: absolute;
-				top: 50%;
-				left: 50%;
-				transform: translate(-50%, -50%);
-				display: inline-block;
-				width: 2rem;
-				height: 2rem;
-				border: 0.2rem solid rgba(195, 57, 34, 0.5);
-				border-radius: 50%;
-
-				&::after {
-					content: '';
-					position: absolute;
-					top: 50%;
-					left: 50%;
-					transform: translate(-50%, -50%);
-					display: inline-block;
-					width: 1rem;
-					height: 1rem;
-					background-color: transparent;
-					border-radius: 50%;
-					line-height: 1;
-				}
-			}
-		}
 	}
 
 	&:hover > span:last-child,
 	&:hover > span:first-child {
 		visibility: visible;
 		background-color: inherit;
+	}
+`;
+
+const ToggleCompletedWrapper = styled.span`
+	flex: 1;
+	position: relative;
+
+	> input {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		visibility: hidden;
+		z-index: 1;
+
+		&:checked + label::after {
+			background-color: rgba(195, 57, 34, 0.5);
+		}
+	}
+
+	> label {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		display: inline-block;
+		width: 2rem;
+		height: 2rem;
+		border: 0.2rem solid rgba(195, 57, 34, 0.5);
+		border-radius: 50%;
+
+		&::after {
+			content: '';
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			display: inline-block;
+			width: 1rem;
+			height: 1rem;
+			background-color: transparent;
+			border-radius: 50%;
+			line-height: 1;
+		}
 	}
 `;
 
@@ -92,7 +91,7 @@ const Controllers = styled.span`
 	}
 `;
 
-const ToggleList = styled.span`
+const ListPreview = styled.span`
 	position: absolute;
 	right: 100%;
 	top: 0;
@@ -173,7 +172,7 @@ const UPDATE_TASK = gql`
 `;
 
 const Task = props => {
-	const { id, name, description, completed, dueDate } = props;
+	const { id, name, description, completed, dueDate, lists } = props;
 	return (
 		<Mutation
 			mutation={REMOVE_TASK}
@@ -190,11 +189,13 @@ const Task = props => {
 				<Mutation mutation={UPDATE_TASK}>
 					{toggleCompleted => (
 						<ListItem completed={completed}>
-							<ToggleList>
-								<i>LIST</i>
-							</ToggleList>
+							{lists.length ? (
+								<ListPreview>
+									<i>{lists.length} items in list.</i>
+								</ListPreview>
+							) : null}
 
-							<span>
+							<ToggleCompletedWrapper>
 								<input
 									type="checkbox"
 									id={`toggle-complete-${id}`}
@@ -207,7 +208,7 @@ const Task = props => {
 									}}
 								/>
 								<label htmlFor={`toggle-complete-${id}`} />
-							</span>
+							</ToggleCompletedWrapper>
 
 							<ContentWrapper>
 								<span>{name}</span>

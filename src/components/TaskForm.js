@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import styled, { css } from 'styled-components';
-import { Link } from 'react-router-dom';
 import DatePicker from 'react-date-picker';
+import { X } from 'react-feather';
+
+import { history } from '../index';
 
 import List from './List';
 
@@ -99,20 +101,30 @@ const DP = styled(DatePicker)`
 	}
 `;
 
-const CancelButton = styled(Link)`
+const CancelButton = styled.button`
 	position: fixed;
 	bottom: 10rem;
-	right: 10rem;
-	display: block;
+	right: 5rem;
 	width: 7rem;
 	height: 7rem;
+	border: none;
 	border-radius: 50%;
-	background-color: tomato;
+	background-color: #aaa;
 	color: white;
-	text-decoration: none;
-	z-index: 100;
+	outline: none;
+	box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+	transition: 0.2s;
 
-	> span {
+	&:hover {
+		transform: translateY(-0.3rem);
+	}
+
+	&:active {
+		transform: translateY(0.3rem);
+		box-shadow: 0 0.3rem 0.5rem rgba(0, 0, 0, 0.3);
+	}
+
+	> i {
 		position: absolute;
 		top: 50%;
 		left: 50%;
@@ -224,8 +236,17 @@ class TaskForm extends Component {
 					<List openList={openList} task={this.props.id} />
 				) : null}
 
-				<CancelButton onClick={this.props.onCloseList} to="/me/dashboard">
-					<span>CANCEL</span>
+				<CancelButton
+					onClick={() => {
+						if (this.props.onCloseList) {
+							this.props.onCloseList();
+						}
+						history.push('/me/dashboard');
+					}}
+				>
+					<i>
+						<X />
+					</i>
 				</CancelButton>
 			</Wrapper>
 		);
