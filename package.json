@@ -35,6 +35,7 @@
 		"react-apollo": "^2.1.11",
 		"react-date-picker": "^6.12.0",
 		"react-dom": "^16.4.2",
+		"react-feather": "^1.1.1",
 		"react-pose": "^2.2.1",
 		"react-router-dom": "^4.3.1",
 		"react-router-transition": "^1.2.1",
