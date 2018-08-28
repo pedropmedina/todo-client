@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Mutation, Query } from 'react-apollo';
 import gql from 'graphql-tag';
+import { ChevronDown, ChevronUp } from 'react-feather';
 
 import filterTasks from '../selectors/filterTasks';
 
@@ -38,9 +39,9 @@ const TableHeader = styled.header`
 				visibility: hidden;
 				z-index: 1;
 
-				&:checked + label::after {
+				/* &:checked + label::after {
 					background-color: #aaa;
-				}
+				} */
 			}
 
 			> label {
@@ -49,12 +50,12 @@ const TableHeader = styled.header`
 				left: 50%;
 				transform: translate(-50%, -50%);
 				display: inline-block;
-				width: 2rem;
+				/* width: 2rem;
 				height: 2rem;
 				border: 0.2rem solid #aaa;
-				border-radius: 50%;
+				border-radius: 50%; */
 
-				&::after {
+				/* &::after {
 					content: '';
 					position: absolute;
 					top: 50%;
@@ -66,9 +67,34 @@ const TableHeader = styled.header`
 					background-color: transparent;
 					border-radius: 50%;
 					line-height: 1;
-				}
+				} */
 			}
 		}
+	}
+`;
+
+const PreviewMessage = styled.p`
+	text-align: center;
+	font-size: 2rem;
+	padding: 9rem;
+	color: #aaa;
+`;
+
+const SVGChevronDown = styled(ChevronDown)`
+	color: #aaa;
+	width: 2.5rem;
+
+	&:hover {
+		color: #000;
+	}
+`;
+
+const SVGChevronUp = styled(ChevronUp)`
+	color: #aaa;
+	width: 2.5rem;
+
+	&:hover {
+		color: #000;
 	}
 `;
 
@@ -132,15 +158,32 @@ const TasksList = props => (
 												toggleAllCompleted();
 											}}
 										/>
-										<label htmlFor="toggleAll" />
+										<label htmlFor="toggleAll">
+											{data.toggleAllCompleted ? (
+												<SVGChevronUp />
+											) : (
+												<SVGChevronDown />
+											)}
+										</label>
 									</h4>
 									<h4 />
 								</TableHeader>
-								<ul>
-									{tasks.map(({ id, ...task }) => (
-										<Task key={id} {...task} id={id} />
-									))}
-								</ul>
+
+								{filter === 'active' && !tasks.length ? (
+									<PreviewMessage>
+										Nothing else pending for the day!
+									</PreviewMessage>
+								) : filter === 'completed' && !tasks.length ? (
+									<PreviewMessage>
+										Apparently you haven't done much today.
+									</PreviewMessage>
+								) : (
+									<ul>
+										{tasks.map(({ id, ...task }) => (
+											<Task key={id} {...task} id={id} />
+										))}
+									</ul>
+								)}
 							</section>
 						</Wrapper>
 					)}

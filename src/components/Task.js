@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
-import { Edit, Delete } from 'react-feather';
+import { Edit, Delete, CheckSquare, XSquare, Square } from 'react-feather';
 
 import { history } from '../index';
 
@@ -40,9 +40,9 @@ const ToggleCompletedWrapper = styled.span`
 		visibility: hidden;
 		z-index: 1;
 
-		&:checked + label::after {
+		/* &:checked + label::after {
 			background-color: rgba(195, 57, 34, 0.5);
-		}
+		} */
 	}
 
 	> label {
@@ -51,12 +51,12 @@ const ToggleCompletedWrapper = styled.span`
 		left: 50%;
 		transform: translate(-50%, -50%);
 		display: inline-block;
-		width: 2rem;
-		height: 2rem;
-		border: 0.2rem solid rgba(195, 57, 34, 0.5);
-		border-radius: 50%;
+		/* width: 2rem;
+		height: 2rem; */
+		/* border: 0.2rem solid rgba(195, 57, 34, 0.5);
+		border-radius: 50%; */
 
-		&::after {
+		/* &::after {
 			content: '';
 			position: absolute;
 			top: 50%;
@@ -68,7 +68,7 @@ const ToggleCompletedWrapper = styled.span`
 			background-color: transparent;
 			border-radius: 50%;
 			line-height: 1;
-		}
+		} */
 	}
 `;
 
@@ -136,7 +136,25 @@ const SVGEdit = styled(Edit)`
 	}
 `;
 
-const SVGDelete = styled(Delete)`
+const SVGDelete = styled(XSquare)`
+	color: #aaa;
+	width: 2.5rem;
+
+	&:hover {
+		color: #000;
+	}
+`;
+
+const SVGUnchecked = styled(Square)`
+	color: #aaa;
+	width: 2.5rem;
+
+	&:hover {
+		color: #000;
+	}
+`;
+
+const SVGChecked = styled(CheckSquare)`
 	color: #aaa;
 	width: 2.5rem;
 
@@ -207,7 +225,9 @@ const Task = props => {
 										});
 									}}
 								/>
-								<label htmlFor={`toggle-complete-${id}`} />
+								<label htmlFor={`toggle-complete-${id}`}>
+									{completed ? <SVGChecked /> : <SVGUnchecked />}
+								</label>
 							</ToggleCompletedWrapper>
 
 							<ContentWrapper>
