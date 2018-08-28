@@ -9,21 +9,12 @@ import Task from './Task';
 
 const Wrapper = styled.article`
 	width: 70rem;
-	/* position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%); */
 	margin: 7rem auto 4rem auto;
-`;
-
-const Table = styled.section`
-	/* box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2); */
 `;
 
 const TableHeader = styled.header`
 	display: flex;
 	justify-content: flex-start;
-	/* background-color: #eee; */
 	margin-bottom: 1.5rem;
 
 	> * {
@@ -93,7 +84,7 @@ const TOGGLE_ALL_COMPLETED = gql`
 	}
 `;
 
-const GET_FILTER_DATES_CURRENTDATE_AND_TOGGLEALLCOMPLETED = gql`
+const GET_LOCAL_STATE = gql`
 	{
 		filter @client
 		dates @client
@@ -103,12 +94,21 @@ const GET_FILTER_DATES_CURRENTDATE_AND_TOGGLEALLCOMPLETED = gql`
 `;
 
 const TasksList = props => (
-	<Query query={GET_FILTER_DATES_CURRENTDATE_AND_TOGGLEALLCOMPLETED}>
+	<Query query={GET_LOCAL_STATE}>
 		{({ loading, error, data, client }) => {
 			if (loading) return <div>Loading...</div>;
 
 			const { filter, dates, currentDate, toggleAllCompleted } = data;
-			const tasks = filterTasks(props.tasks, data);
+
+			// sort completed to end when in 'all' view
+			let tasks;
+			if (filter === 'all') {
+				tasks = filterTasks(props.tasks, data).sort(
+					(a, b) => (a.completed ? 1 : -1),
+				);
+			} else {
+				tasks = filterTasks(props.tasks, data);
+			}
 
 			return (
 				<Mutation
@@ -117,7 +117,7 @@ const TasksList = props => (
 				>
 					{toggleAllCompleted => (
 						<Wrapper>
-							<Table>
+							<section>
 								<TableHeader>
 									<h4>
 										<input
@@ -141,7 +141,7 @@ const TasksList = props => (
 										<Task key={id} {...task} id={id} />
 									))}
 								</ul>
-							</Table>
+							</section>
 						</Wrapper>
 					)}
 				</Mutation>

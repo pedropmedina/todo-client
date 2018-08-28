@@ -49,7 +49,8 @@ const EditTask = props => (
 			{({ data, client }) => {
 				return (
 					<Query query={FIND_TASK} variables={{ id: props.match.params.id }}>
-						{({ data: data1 }) => {
+						{({ data: data1, loading }) => {
+							if (loading) return <div>Loading...</div>;
 							return (
 								<Mutation
 									mutation={UPDATE_TASK}

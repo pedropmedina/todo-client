@@ -195,7 +195,7 @@ class TaskForm extends Component {
 					<input
 						type="text"
 						name="description"
-						placeholder="Too complex of a need? Add a description."
+						placeholder="Need more space? Add description."
 						value={description}
 						onChange={this.handleInputFields}
 					/>

@@ -41,22 +41,20 @@ const config = {
 		scale: 1,
 		x: 0,
 		transition: {
-			opacity: { ease: 'easeIn', duration: 200 },
+			opacity: { ease: 'easeIn', duration: 100 },
 			default: {
 				type: 'spring',
-				stiffness: 50,
+				stiffness: 70,
 				ease: 'easeIn',
-				duration: 20,
 			},
 		},
 	},
 	exit: {
 		opacity: 0,
-		// x: '100%',
 		scale: 1.5,
 		transition: {
-			opacity: { ease: 'easeOut', duration: 300 },
-			default: { ease: 'easeOut', duration: 500 },
+			opacity: { ease: 'easeOut', duration: 200 },
+			default: { ease: 'easeOut', duration: 300 },
 		},
 	},
 };

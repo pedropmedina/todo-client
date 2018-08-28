@@ -32,7 +32,7 @@ export const matches = [
 const config = {
 	enter: {
 		opacity: 1,
-		transition: { opacity: { ease: 'easeInOut', duration: 300 } },
+		transition: { opacity: { ease: 'easeIn', duration: 300 } },
 		scale: 1,
 	},
 	exit: {
