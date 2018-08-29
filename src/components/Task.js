@@ -2,17 +2,22 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { Mutation } from 'react-apollo';
 import gql from 'graphql-tag';
-import { Edit, Delete, CheckSquare, XSquare, Square } from 'react-feather';
+import { Edit, CheckSquare, XSquare, Square } from 'react-feather';
 
 import { history } from '../index';
 
+// Styles -------------------------------------
 const ListItem = styled.li`
 	display: flex;
 	justify-content: flex-start;
+	flex-wrap: wrap;
 	position: relative;
+	margin-bottom: 1.5rem;
 	color: ${({ completed }) => (completed ? 'rgb(196, 196, 196)' : 'initial')};
 	text-decoration: ${({ completed }) => (completed ? 'line-through' : 'none')};
 	border-bottom: 0.1rem solid #eee;
+	box-shadow: ${({ showList, completed }) =>
+		showList && !completed ? '0 0.3rem 0.7rem rgba(0, 0, 0, .1)' : 'unset'};
 
 	> * {
 		flex: 9;
@@ -39,10 +44,6 @@ const ToggleCompletedWrapper = styled.span`
 		transform: translate(-50%, -50%);
 		visibility: hidden;
 		z-index: 1;
-
-		/* &:checked + label::after {
-			background-color: rgba(195, 57, 34, 0.5);
-		} */
 	}
 
 	> label {
@@ -51,24 +52,6 @@ const ToggleCompletedWrapper = styled.span`
 		left: 50%;
 		transform: translate(-50%, -50%);
 		display: inline-block;
-		/* width: 2rem;
-		height: 2rem; */
-		/* border: 0.2rem solid rgba(195, 57, 34, 0.5);
-		border-radius: 50%; */
-
-		/* &::after {
-			content: '';
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
-			display: inline-block;
-			width: 1rem;
-			height: 1rem;
-			background-color: transparent;
-			border-radius: 50%;
-			line-height: 1;
-		} */
 	}
 `;
 
@@ -127,6 +110,35 @@ const ContentWrapper = styled.span`
 	}
 `;
 
+const ListView = styled.div`
+	flex: unset;
+	width: 100%;
+	padding: 2rem 3rem;
+
+	> ul {
+		list-style: none;
+
+		> li {
+			margin-bottom: 1rem;
+			padding: 1rem;
+			border-bottom: 0.1rem solid #eee;
+			font-size: 1.2rem;
+			color: #aaa;
+		}
+	}
+
+	> button {
+		border: none;
+		border-radius: 0.4rem;
+		margin: 1.5rem 0 3rem 0;
+		font-size: 1.2rem;
+		padding: 1rem 3rem;
+		background-color: rgb(252, 91, 88);
+		color: #fff;
+		cursor: pointer;
+	}
+`;
+
 const SVGEdit = styled(Edit)`
 	color: #aaa;
 	width: 2.5rem;
@@ -163,6 +175,7 @@ const SVGChecked = styled(CheckSquare)`
 	}
 `;
 
+// Graphql queries --------------------------
 const REMOVE_TASK = gql`
 	mutation RemoveTaskById($id: ID!) {
 		removeTask(id: $id) {
@@ -189,66 +202,90 @@ const UPDATE_TASK = gql`
 	}
 `;
 
-const Task = props => {
-	const { id, name, description, completed, dueDate, lists } = props;
-	return (
-		<Mutation
-			mutation={REMOVE_TASK}
-			variables={{ id }}
-			update={(cache, { data: { removeTask } }) => {
-				const { tasks } = cache.readQuery({ query: GET_TASKS });
-				cache.writeQuery({
-					query: GET_TASKS,
-					data: { tasks: tasks.filter(task => task.id !== id) },
-				});
-			}}
-		>
-			{removeTask => (
-				<Mutation mutation={UPDATE_TASK}>
-					{toggleCompleted => (
-						<ListItem completed={completed}>
-							{lists.length ? (
-								<ListPreview>
-									<i>{lists.length} items in list.</i>
-								</ListPreview>
-							) : null}
+// Functionality --------------------------
+class Task extends Component {
+	state = {
+		showList: false,
+	};
 
-							<ToggleCompletedWrapper>
-								<input
-									type="checkbox"
-									id={`toggle-complete-${id}`}
-									checked={props.completed}
-									onChange={event => {
-										const { checked } = event.target;
-										toggleCompleted({
-											variables: { input: { id, completed: checked } },
-										});
-									}}
-								/>
-								<label htmlFor={`toggle-complete-${id}`}>
-									{completed ? <SVGChecked /> : <SVGUnchecked />}
-								</label>
-							</ToggleCompletedWrapper>
+	render() {
+		const { id, name, description, completed, dueDate, lists } = this.props;
+		return (
+			<Mutation
+				mutation={REMOVE_TASK}
+				variables={{ id }}
+				update={(cache, { data: { removeTask } }) => {
+					const { tasks } = cache.readQuery({ query: GET_TASKS });
+					cache.writeQuery({
+						query: GET_TASKS,
+						data: { tasks: tasks.filter(task => task.id !== id) },
+					});
+				}}
+			>
+				{removeTask => (
+					<Mutation mutation={UPDATE_TASK}>
+						{toggleCompleted => (
+							<ListItem completed={completed} showList={this.state.showList}>
+								{lists.length && !completed && !this.state.showList ? (
+									<ListPreview
+										onClick={() => this.setState({ showList: true })}
+									>
+										<i>View {lists.length} items in list.</i>
+									</ListPreview>
+								) : null}
 
-							<ContentWrapper>
-								<span>{name}</span>
-								<span>{description}</span>
-							</ContentWrapper>
+								<ToggleCompletedWrapper>
+									<input
+										type="checkbox"
+										id={`toggle-complete-${id}`}
+										checked={this.props.completed}
+										onChange={event => {
+											const { checked } = event.target;
+											toggleCompleted({
+												variables: { input: { id, completed: checked } },
+											});
+										}}
+									/>
+									<label htmlFor={`toggle-complete-${id}`}>
+										{completed ? <SVGChecked /> : <SVGUnchecked />}
+									</label>
+								</ToggleCompletedWrapper>
 
-							<Controllers>
-								<span onClick={() => history.push(`/me/edit/${id}`)}>
-									<SVGEdit />
-								</span>
-								<span onClick={removeTask}>
-									<SVGDelete />
-								</span>
-							</Controllers>
-						</ListItem>
-					)}
-				</Mutation>
-			)}
-		</Mutation>
-	);
-};
+								<ContentWrapper>
+									<span>{name}</span>
+									<span>{description}</span>
+								</ContentWrapper>
+
+								<Controllers>
+									<span onClick={() => history.push(`/me/edit/${id}`)}>
+										<SVGEdit />
+									</span>
+									<span onClick={removeTask}>
+										<SVGDelete />
+									</span>
+								</Controllers>
+								{!!this.state.showList &&
+									!completed && (
+										<ListView>
+											<ul>
+												{lists.map(({ id, content }) => {
+													return <li key={id}>{content}</li>;
+												})}
+											</ul>
+											<button
+												onClick={() => this.setState({ showList: false })}
+											>
+												Hide
+											</button>
+										</ListView>
+									)}
+							</ListItem>
+						)}
+					</Mutation>
+				)}
+			</Mutation>
+		);
+	}
+}
 
 export default Task;

@@ -14,10 +14,6 @@ const Wrapper = styled.div`
 const Form = styled.form`
 	width: 50rem;
 	margin: 0 auto 7rem auto;
-	/* position: absolute;
-	top: 25%;
-	left: 50%;
-	transform: translate(-50%, -25%); */
 
 	> input {
 		transition: 0.2s;
