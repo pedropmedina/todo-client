@@ -38,10 +38,6 @@ const TableHeader = styled.header`
 				transform: translate(-50%, -50%);
 				visibility: hidden;
 				z-index: 1;
-
-				/* &:checked + label::after {
-					background-color: #aaa;
-				} */
 			}
 
 			> label {
@@ -50,24 +46,6 @@ const TableHeader = styled.header`
 				left: 50%;
 				transform: translate(-50%, -50%);
 				display: inline-block;
-				/* width: 2rem;
-				height: 2rem;
-				border: 0.2rem solid #aaa;
-				border-radius: 50%; */
-
-				/* &::after {
-					content: '';
-					position: absolute;
-					top: 50%;
-					left: 50%;
-					transform: translate(-50%, -50%);
-					display: inline-block;
-					width: 1rem;
-					height: 1rem;
-					background-color: transparent;
-					border-radius: 50%;
-					line-height: 1;
-				} */
 			}
 		}
 	}
@@ -175,7 +153,7 @@ const TasksList = props => (
 									</PreviewMessage>
 								) : filter === 'completed' && !tasks.length ? (
 									<PreviewMessage>
-										Apparently you haven't done much today.
+										Nothing has been completed yet.
 									</PreviewMessage>
 								) : (
 									<ul>

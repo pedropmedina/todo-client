@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
 import { Link } from 'react-router-dom';
 
+// Styles ------------------------------
 const Wrapper = styled.div`
 	position: absolute;
 	top: 50%;
@@ -64,6 +65,7 @@ const Form = styled.form`
 	}
 `;
 
+// Graphql queries ----------------------------------
 const LOGIN = gql`
 	mutation LoginUser($input: NewUserLoginInput!) {
 		login(input: $input) {
@@ -89,6 +91,7 @@ const SIGNUP = gql`
 	}
 `;
 
+// Functionality ---------------------------------------
 class AuthForm extends Component {
 	state = {
 		fields: {
@@ -176,7 +179,8 @@ class AuthForm extends Component {
 				</Mutation>
 				{this.props.login ? (
 					<div>
-						Don't have an account? -<Link to="/auth/signup">Signup here →</Link>
+						Don't have an account? -{' '}
+						<Link to="/auth/signup">Signup here →</Link>
 					</div>
 				) : (
 					<div>

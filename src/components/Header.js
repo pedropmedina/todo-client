@@ -4,9 +4,11 @@ import moment from 'moment';
 import DateRangePicker from '@wojtekmaj/react-daterange-picker';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
+import { User, LogOut } from 'react-feather';
 
 import tasksSummary from '../selectors/tasksSummary';
 
+// Styles -----------------------------------
 const HeaderWrapper = styled.header`
 	height: 35rem;
 	background-color: #eee;
@@ -66,11 +68,12 @@ const Topbar = styled.div`
 	padding: 1rem;
 
 	> span {
-		margin-right: 3rem;
+		margin-right: 10rem;
 		height: 3rem;
 
 		&:first-child {
 			width: 20rem;
+			margin-right: 3rem;
 
 			> input {
 				width: 100%;
@@ -82,6 +85,7 @@ const Topbar = styled.div`
 				letter-spacing: 0.1rem;
 				font-size: 1.2rem;
 				outline: none;
+				border-radius: 0.2rem;
 
 				&::placeholder {
 					color: rgba(255, 255, 255, 0.5);
@@ -89,10 +93,54 @@ const Topbar = styled.div`
 			}
 		}
 
+		/* span containing user modal*/
 		&:last-child {
 			width: 3rem;
 			border-radius: 50%;
 			background-color: rgba(255, 255, 255, 0.2);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			position: relative;
+
+			/* user modal */
+			> span {
+				position: absolute;
+				top: 130%;
+				left: 50%;
+				transform: translateX(-50%);
+				border-radius: 0.4rem;
+				box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.1);
+				background-color: #fff;
+				color: #aaa;
+				padding: 1rem;
+
+				> ul {
+					list-style: none;
+
+					> li {
+						display: flex;
+						padding: 0.5rem 1.5rem;
+
+						&:not(:last-child) {
+							border-bottom: 0.1rem solid #ddd;
+						}
+
+						&:hover {
+							color: #000;
+							cursor: pointer;
+						}
+
+						> * {
+							font-size: 1.5rem;
+
+							&:not(:last-child) {
+								margin-right: 1.5rem;
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 `;
@@ -217,7 +265,8 @@ const DRP = styled(DateRangePicker)`
 	}
 `;
 
-const GET_FILTER_DATES_AND_CURRENTDATE = gql`
+// Graphql queries ----------------------------------
+const GET_LOCAL_STATE = gql`
 	{
 		filter @client
 		dates @client
@@ -225,74 +274,122 @@ const GET_FILTER_DATES_AND_CURRENTDATE = gql`
 	}
 `;
 
+// Functionality ---------------------------------------------
 const FILTER_TYPES = ['all', 'active', 'completed', 'calendar'];
 
-const Header = props => {
-	return (
-		<Query query={GET_FILTER_DATES_AND_CURRENTDATE}>
-			{({ loading, error, data, client }) => {
-				if (loading) return <div>Loading...</div>;
+class Header extends Component {
+	state = {
+		openUserModal: false,
+	};
 
-				const { filter, dates, currentDate } = data;
-				return (
-					<HeaderWrapper filter={filter}>
-						<Topbar>
-							<span>
-								<input type="text" placeholder="search..." />
-							</span>
-							<span />
-						</Topbar>
-						<h3>
-							<span>{moment(currentDate).format('ddd')},</span>
-							<span>{moment(currentDate).format('MMM Do, YYYY')}</span>
-						</h3>
-						{filter === 'all' ? (
-							<Summary>
-								<p>{tasksSummary(props.tasks, data)}</p>
-							</Summary>
-						) : filter === 'active' ? (
-							<Summary>
-								<p>{tasksSummary(props.tasks, data)}</p>
-							</Summary>
-						) : filter === 'completed' ? (
-							<Summary>
-								<p>{tasksSummary(props.tasks, data)}</p>
-							</Summary>
-						) : filter === 'calendar' ? (
-							<Summary>
-								<p>{tasksSummary(props.tasks, data)}</p>
-								<DRP
-									value={dates ? dates.map(date => new Date(date)) : null}
-									onChange={dates => {
-										if (dates) {
-											const timeStamps = dates.map(date => date.getTime());
-											client.writeData({ data: { dates: timeStamps } });
-										} else {
-											client.writeData({ data: { dates: null } });
-										}
-									}}
-								/>
-							</Summary>
-						) : null}
+	modal = React.createRef();
 
-						<Filterbar>
-							<FilterTabs>
-								{FILTER_TYPES.map(filter => (
-									<Tab
-										key={`FILTER_${filter}`}
-										filter={data.filter}
-										onClick={() => client.writeData({ data: { filter } })}
-									>
-										{filter}
-									</Tab>
-								))}
-							</FilterTabs>
-						</Filterbar>
-					</HeaderWrapper>
-				);
-			}}
-		</Query>
-	);
-};
+	componentWillMount() {
+		document.addEventListener('mousedown', this.handleToggleUserModal);
+	}
+
+	componentWillUnmount() {
+		document.removeEventListener('mousedown', this.handleToggleUserModal);
+	}
+
+	handleToggleUserModal = e => {
+		if (this.modal.current.contains(e.target)) {
+			this.setState({ openUserModal: true });
+			return;
+		}
+
+		this.setState({ openUserModal: false });
+	};
+
+	render() {
+		return (
+			<Query query={GET_LOCAL_STATE}>
+				{({ loading, error, data, client }) => {
+					if (loading) return <div>Loading...</div>;
+
+					const { filter, dates, currentDate } = data;
+					return (
+						<HeaderWrapper filter={filter}>
+							<Topbar>
+								<span>
+									<input type="text" placeholder="search..." />
+								</span>
+								<span ref={this.modal}>
+									<i>
+										<User />
+									</i>
+									{this.state.openUserModal ? (
+										<span>
+											<ul>
+												<li
+													onClick={() => {
+														localStorage.removeItem('authorization');
+														this.props.push('/auth/login');
+													}}
+												>
+													<i>Logout</i>
+													<i>
+														<LogOut />
+													</i>
+												</li>
+											</ul>
+										</span>
+									) : null}
+								</span>
+							</Topbar>
+
+							<h3>
+								<span>{moment(currentDate).format('ddd')},</span>
+								<span>{moment(currentDate).format('MMM Do, YYYY')}</span>
+							</h3>
+							{filter === 'all' ? (
+								<Summary>
+									<p>{tasksSummary(this.props.tasks, data)}</p>
+								</Summary>
+							) : filter === 'active' ? (
+								<Summary>
+									<p>{tasksSummary(this.props.tasks, data)}</p>
+								</Summary>
+							) : filter === 'completed' ? (
+								<Summary>
+									<p>{tasksSummary(this.props.tasks, data)}</p>
+								</Summary>
+							) : filter === 'calendar' ? (
+								<Summary>
+									<p>{tasksSummary(this.props.tasks, data)}</p>
+									<DRP
+										value={dates ? dates.map(date => new Date(date)) : null}
+										onChange={dates => {
+											if (dates) {
+												const timeStamps = dates.map(date => date.getTime());
+												client.writeData({ data: { dates: timeStamps } });
+											} else {
+												client.writeData({ data: { dates: null } });
+											}
+										}}
+									/>
+								</Summary>
+							) : null}
+
+							<Filterbar>
+								<FilterTabs>
+									{FILTER_TYPES.map(filter => (
+										<Tab
+											key={`FILTER_${filter}`}
+											filter={data.filter}
+											onClick={() => client.writeData({ data: { filter } })}
+										>
+											{filter}
+										</Tab>
+									))}
+								</FilterTabs>
+							</Filterbar>
+						</HeaderWrapper>
+					);
+				}}
+			</Query>
+		);
+	}
+}
 
 export default Header;

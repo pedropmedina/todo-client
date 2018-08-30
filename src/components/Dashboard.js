@@ -60,7 +60,7 @@ const Dashboard = props => (
 			if (loading) return <div>LOADING...</div>;
 			return (
 				<React.Fragment>
-					<Header tasks={data.tasks} />
+					<Header tasks={data.tasks} push={props.history.push} />
 					<TasksList tasks={data.tasks} />
 					<AddButton onClick={() => props.history.push('/me/add')}>
 						<i>
