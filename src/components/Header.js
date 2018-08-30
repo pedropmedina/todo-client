@@ -115,6 +115,7 @@ const UserModal = styled.span`
 	background-color: #fff;
 	color: #aaa;
 	padding: 1rem;
+	visibility: ${({ openUserModal }) => (openUserModal ? 'visible' : 'hidden')};
 
 	> ul {
 		list-style: none;
@@ -338,6 +339,7 @@ class Header extends Component {
 									</i>
 									<PosedUserModal
 										pose={this.state.openUserModal ? 'visible' : 'hidden'}
+										openUserModal={this.state.openUserModal}
 									>
 										<ul>
 											<li
