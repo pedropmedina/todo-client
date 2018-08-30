@@ -5,6 +5,7 @@ import DateRangePicker from '@wojtekmaj/react-daterange-picker';
 import { Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import { User, LogOut } from 'react-feather';
+import posed from 'react-pose';
 
 import tasksSummary from '../selectors/tasksSummary';
 
@@ -102,43 +103,40 @@ const Topbar = styled.div`
 			justify-content: center;
 			align-items: center;
 			position: relative;
+		}
+	}
+`;
 
-			/* user modal */
-			> span {
-				position: absolute;
-				top: 130%;
-				left: 50%;
-				transform: translateX(-50%);
-				border-radius: 0.4rem;
-				box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.1);
-				background-color: #fff;
-				color: #aaa;
-				padding: 1rem;
+const UserModal = styled.span`
+	position: absolute;
+	top: 130%;
+	border-radius: 0.4rem;
+	box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.1);
+	background-color: #fff;
+	color: #aaa;
+	padding: 1rem;
 
-				> ul {
-					list-style: none;
+	> ul {
+		list-style: none;
 
-					> li {
-						display: flex;
-						padding: 0.5rem 1.5rem;
+		> li {
+			display: flex;
+			padding: 0.5rem 1.5rem;
 
-						&:not(:last-child) {
-							border-bottom: 0.1rem solid #ddd;
-						}
+			&:not(:last-child) {
+				border-bottom: 0.1rem solid #ddd;
+			}
 
-						&:hover {
-							color: #000;
-							cursor: pointer;
-						}
+			&:hover {
+				color: #000;
+				cursor: pointer;
+			}
 
-						> * {
-							font-size: 1.5rem;
+			> * {
+				font-size: 1.5rem;
 
-							&:not(:last-child) {
-								margin-right: 1.5rem;
-							}
-						}
-					}
+				&:not(:last-child) {
+					margin-right: 1.5rem;
 				}
 			}
 		}
@@ -265,6 +263,26 @@ const DRP = styled(DateRangePicker)`
 	}
 `;
 
+// Pose --------------------------------------
+const config = {
+	visible: {
+		opacity: 1,
+		scale: 1,
+		transition: {
+			default: { ease: 'easeIn', duration: 100 },
+		},
+	},
+	hidden: {
+		opacity: 0,
+		scale: 0.5,
+		transition: {
+			default: { ease: 'easeOut', duration: 150 },
+		},
+	},
+};
+
+const PosedUserModal = posed(UserModal)(config);
+
 // Graphql queries ----------------------------------
 const GET_LOCAL_STATE = gql`
 	{
@@ -318,23 +336,23 @@ class Header extends Component {
 									<i>
 										<User />
 									</i>
-									{this.state.openUserModal ? (
-										<span>
-											<ul>
-												<li
-													onClick={() => {
-														localStorage.removeItem('authorization');
-														this.props.push('/auth/login');
-													}}
-												>
-													<i>Logout</i>
-													<i>
-														<LogOut />
-													</i>
-												</li>
-											</ul>
-										</span>
-									) : null}
+									<PosedUserModal
+										pose={this.state.openUserModal ? 'visible' : 'hidden'}
+									>
+										<ul>
+											<li
+												onClick={() => {
+													localStorage.removeItem('authorization');
+													this.props.push('/auth/login');
+												}}
+											>
+												<i>Logout</i>
+												<i>
+													<LogOut />
+												</i>
+											</li>
+										</ul>
+									</PosedUserModal>
 								</span>
 							</Topbar>
 
