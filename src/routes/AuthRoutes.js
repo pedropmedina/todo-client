@@ -49,14 +49,13 @@ const StyledRouteContainer = styled.div`
 const RouteContainer = posed(StyledRouteContainer)(config);
 
 export default ({ location, match }) => {
-	const matched = matches.filter(filterRoutes(location.pathname)).map(
-		({ path, component: Component, exact }) =>
-			console.log(path) || (
-				<RouteContainer key={`ROUTE_${path}`}>
-					<PublicRouter path={path} component={Component} exact={exact} />
-				</RouteContainer>
-			),
-	);
+	const matched = matches
+		.filter(filterRoutes(location.pathname))
+		.map(({ path, component: Component, exact }) => (
+			<RouteContainer key={`ROUTE_${path}`}>
+				<PublicRouter path={path} component={Component} exact={exact} />
+			</RouteContainer>
+		));
 
 	return (
 		<Switch>

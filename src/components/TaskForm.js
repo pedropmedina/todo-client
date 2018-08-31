@@ -7,6 +7,7 @@ import { history } from '../index';
 
 import List from './List';
 
+// Styles -------------------------------------
 const Wrapper = styled.div`
 	padding-top: 7rem;
 `;
@@ -128,6 +129,7 @@ const CancelButton = styled.button`
 	}
 `;
 
+// Functionality -----------------------------------------
 class TaskForm extends Component {
 	state = {
 		fields: {

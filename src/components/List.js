@@ -8,6 +8,7 @@ import { history } from '../index';
 
 import ListForm from './ListForm';
 
+// Styles -----------------------------------
 const ListWrapper = styled.div`
 	width: 70rem;
 	margin: 3rem auto;
@@ -39,6 +40,7 @@ const ListItems = styled.ul`
 	}
 `;
 
+// Pose -----------------------------------------
 const config = {
 	visible: {
 		opacity: 1,
@@ -58,6 +60,7 @@ const config = {
 
 const PosedWrapper = posed(ListWrapper)(config);
 
+// Graphql queries ----------------------------------------
 const FIND_TASK = gql`
 	query FindTaskById($id: ID!) {
 		task: findTask(id: $id) {
@@ -85,6 +88,7 @@ const NEW_LIST = gql`
 	}
 `;
 
+// Functionality -------------------------------------
 const List = ({ openList, task }) => (
 	<Query query={FIND_TASK} variables={{ id: task }}>
 		{({ loading, data, client }) => {

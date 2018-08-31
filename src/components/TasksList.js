@@ -8,6 +8,7 @@ import filterTasks from '../selectors/filterTasks';
 
 import Task from './Task';
 
+// Styles --------------------------------
 const Wrapper = styled.article`
 	width: 70rem;
 	margin: 7rem auto 4rem auto;
@@ -76,6 +77,7 @@ const SVGChevronUp = styled(ChevronUp)`
 	}
 `;
 
+// Graphql queries -------------------------------------
 const TOGGLE_ALL_COMPLETED = gql`
 	mutation ToggleAllCompleted($completed: Boolean!) {
 		toggleAllCompleted(completed: $completed) {
@@ -97,6 +99,7 @@ const GET_LOCAL_STATE = gql`
 	}
 `;
 
+// Functionality ---------------------------------------
 const TasksList = props => (
 	<Query query={GET_LOCAL_STATE}>
 		{({ loading, error, data, client }) => {

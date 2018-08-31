@@ -74,22 +74,3 @@ const Dashboard = props => (
 );
 
 export default Dashboard;
-
-// TODO: Filter bar:
-// 1- toggle all completed/uncompleted
-// 2- preview todos left
-// 3- show all
-// 4- show active
-// 5- show completed
-
-// TODO: Search bar
-
-// TODO: Move to day arrows on side
-
-// TODO: Add sidebar for more options including calendar to filter todos
-
-// TODO: Add show list or add list on accordion mode
-
-// TODO: Add graphs for stats
-
-// TODO: Add top bar for profile settings and current day and time

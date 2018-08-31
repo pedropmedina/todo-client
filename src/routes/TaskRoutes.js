@@ -67,6 +67,9 @@ const StyledRouteContainer = styled.div`
 const RouteContainer = posed(StyledRouteContainer)(config);
 
 export default ({ location, match }) => {
+	// filter route in order to be used with PoseGroup as it only animates on
+	// entry once all children have exited. To achive that all children
+	// exit, we only pass one child at a time
 	const matched = matches
 		.filter(filterRoutes(location.pathname))
 		.map(({ path, component: Component, exact }) => (
