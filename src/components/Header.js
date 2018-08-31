@@ -69,41 +69,15 @@ const Topbar = styled.div`
 	padding: 1rem;
 
 	> span {
-		margin-right: 10rem;
+		margin-right: 7rem;
 		height: 3rem;
-
-		&:first-child {
-			width: 20rem;
-			margin-right: 3rem;
-
-			> input {
-				width: 100%;
-				height: 100%;
-				border: none;
-				text-indent: 1rem;
-				background-color: rgba(255, 255, 255, 0.2);
-				color: #fff;
-				letter-spacing: 0.1rem;
-				font-size: 1.2rem;
-				outline: none;
-				border-radius: 0.2rem;
-
-				&::placeholder {
-					color: rgba(255, 255, 255, 0.5);
-				}
-			}
-		}
-
-		/* span containing user modal*/
-		&:last-child {
-			width: 3rem;
-			border-radius: 50%;
-			background-color: rgba(255, 255, 255, 0.2);
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			position: relative;
-		}
+		width: 3rem;
+		border-radius: 50%;
+		background-color: rgba(255, 255, 255, 0.2);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		position: relative;
 	}
 `;
 
@@ -330,9 +304,6 @@ class Header extends Component {
 					return (
 						<HeaderWrapper filter={filter}>
 							<Topbar>
-								<span>
-									<input type="text" placeholder="search..." />
-								</span>
 								<span ref={this.modal}>
 									<i>
 										<User />
